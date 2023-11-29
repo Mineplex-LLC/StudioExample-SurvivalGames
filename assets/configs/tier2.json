@@ -1,0 +1,569 @@
+{
+  "name": "Tier-2",
+  "locations": [
+  ],
+  "items": [
+    {
+      "items": [
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ5AMBAF0F8NEWLjOLZcga18DGkwTaoSZ7fi7V4BWJQdIwcJl/MKVG+OxC2oT6cyB66xccHryEcK2MjNIut4chP8DMpepyDcOR1i/qetvzUafNqbwehbAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 180,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBAF0F8bjGnDituwlSvo1vzKQBpkmpQh8eyu7Nu9AHjEican1CMXBfrfDZc8Y9izyrtysfGwovLiVwK8cfW4Tty5ChqH+NBUhRvTR1x7dy+nmsMfR63fjVwAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ5AMBAF0F8NEY2ly9hyBbYyGNJgmrQj7m7F270KsHA9KY0ckw8C1G+JzK9oLi+8RNq0TRqEp/SEuFawSrtF0dNFO+Nn4AaZI9NB88nmf96FW9TgA29vLOBeAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 240,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HwQ5EMBQF0NtpTCYaO19jyy+MrVw80uA1qQrfbsXZnRywcA0TW4m7DwoU9w8fP6LcvMoQOaXqDGEU7XhJDps4W3wbbpwFLwP31z4KF/armPdZHQ5NBg/va5p3XQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 210,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ5AMBAF0F8NEWLrMLZcga0MHdJgJmkr7m7F270KsKgHSjRxiF4FaN4SmXdoLy+8BtpS96g6ljk+GlwFm2i3KAa6aGf8DOpRlsB00HKy+Z/3eksy+ABYoeinXwAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        }
+      ],
+      "itemsPerContainer": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "probability": 1.0
+    },
+    {
+      "items": [
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBQE0CmNhpR4A0/iFq4gWzPgCA2lkPK9vCt5uxcAj6ajsVc54paB269GFd+4rzFrLPzYI4k2q7zGWYftiaYAb5w8rh1XTsLJoXnmoYgLhyR3/tJu32wOf8HE4WdlAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBAF0F8aDaHxAh7FLVxBtuaDI0xoh6QOl3clb/c6ICINdI5Sv7obcPu1aPSNe1GTufLjj3mlWqHm1yq5iHeIziXiOrBwEZwC0tOmKtw4ZQnnL/1+mAf8AZL20IZjAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/xXBTQ5AMBAG0K8aIhUXcBRbPYOtTBijSX+SGpe3Eu85wGLwpLRyvUPJwPj2aMKBKYXMe6VT58ikF9ctskjIcjtYJbHoPCUSxs+gXcqT1eADQ+4j8VQAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 25,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ5AQAwF0D8mRIid09hyBbbSoWSCNhl1eSve7lWARz2Q0cTpjipA85bI4or2isJLos26mFTmoGp3BW+0exQDXbQzfg71KCExHRROdv/zXh8xhw+ylWkXXQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6DIBAF0E+JTSNx7V26lSvUbTPqSIkwJDi9vCt5u9cDFs6T0sz1jEWA4XrhETeMOQqvlXZ9h5I2lu+PU2btYZWCxdNTpsBoDNxHlsp00JLYtHdT+Ysa3HiOml9gAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 25,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ5AMBAF0F8NEY2ly9hyBbYyGDR0mtS4vBVv9yrAwvWkNHK6fRSgfktkfkUTvPCSaNPWpyjTwVdgrWCVdouip0A742fgBpkT00nzxeZ/3sVH1OADXSuPdF4AAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 25,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ5AQAwF0D8mRIi1u9hyBbZSVNOgk4xxeSve7lWARz1QoonjrcGA5i2R6Yb2UuM10p46jcHmk0XU5K7gE4lHMdBFwvg51KMtkemg5WT3P+/DY8nhAzqE2g5gAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6DIBAF0E9JTaPpundxq1fQrfm0UyQiJDBevqvydq8HLIaZylVKDTkBz98Dt/DB6wxJ3oVfHaNQdymby1lrD6v0Ft3Mk17QGAxLckV40EUx7fcpX0kN/sc4/SdgAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBAF0F8bjIF4AK7CVq6gW/MLI0yk06SMl3cFb/daIKIb6XxJ3bUYcP/fcNEZfVaTqfLjw7RSLVO3dyrF9xbRuURcR2YuglNA97RUhV+mTcL55lF+5gEHh9xm1mIAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBQE0KmNxtCw9yxu4QqyJYOO0NCWpHwu70re7jWAR+hpHFT3uBWg/d1xiR88cix6V37tmURbVMdFKcsaeOPsceuZOQsnh/AqUxVXTknu/LXbjmIOf9C4cCphAAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBAF0F8bjIFwBQ/CVq6gW/MpI0xsB1PGy7uSt3stENGNdD6k7roZ0P8uOOmMa1GTVPnyIa1UK9T8TKvs/sl0aRGdS8R5ZOEiOAR0d5uq8M0pSzje3LavecAfQuDbImcAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBAF0F8bjIF4A07CVq6gW/OBcZjYDkmpl3cFb/daIKIbWfmSstvmwP1/w8UW9Nlc5sJPHeaV5pmW3klUzXVvESs14joyUwWngO7pUxF+OSUJ55vH9vMacAAtoJL1ZQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ5AMBAF0F8NEY0DuIotV2ArgzFp1DSpurwVb/cawMKNlGnmdPuoQPvWKPyO7vLKW6Ij9xLDzroEFvEqdwObSSyqkS4Sxs/ATbomppPWwOZ/OcRHs8EHoPKS52IAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 25,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HMQ6DMBAEwHWsRJFRHpCv0MIXQosWuIAFnJE5Pk8F000APIqaxkbyHpMCn/ONRxzwXaNKn/m3MuakbT/JbttCkwBvHD1eNVeOgptD8dMuC2d2i7j7zyodag4XxjvTCmIAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HQQ6CMBAF0F8bjYF4Am/iVq6gW/Jpx9pYpqYMl2cFb/c6wKMfaHxLW3JV4LZdccoR9zmrhMaPPVItUXQMX1nsX2jSwRuTx2XgzCQ4OPQvnZrwx6mIO35+1lXNYQf8/o7aZAAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 75,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/w3HMQ6DMAwF0J9GVBWIlcOwwhXKihwwUQTYUjCXZyJvezXg0YxkNHG+kgrQPj980oruTMJLps36qMfKMgdVu2p4o+jxHemkyCgcmr+EzLRTONiVV4PeYg4vNRdCml8AAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        }
+      ],
+      "itemsPerContainer": {
+        "minimum": 1,
+        "maximum": 2
+      },
+      "probability": 1.0
+    },
+    {
+      "items": [
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCUm5mXmlyUmFZiVZyXX56UmJPDyMDqnF+aV8LIAAA/W45/OAAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 50,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCbm5mXmlyUmFZilZRfzsXAXJKYzszA5pKYm5ieygACjAyszvmleSWMDAA89ahJRwAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCbm5mXmlyUmFZilZqezsjA6pxfmlfCyAAANujZrTMAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/xXBOwqAMBAFwBeDIhFLL2OrZ7CVxXzcIhtI1stbiTMOsJh2UjpCbVwEmN8RHXssmSVclaKukdvNks5avINVShbDTplSwM+g38ojavAB+AXmmk8AAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 50,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCfm5mXmlyUmFZilVhUlF/OyMDqnF+aV8LIAACVipcfNQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        }
+      ],
+      "itemsPerContainer": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "probability": 1.0
+    },
+    {
+      "items": [
+        {
+          "weight": 80,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCem5mXmlyUmFZilVtanFGUn58bX1ySWs7IwOqcX5pXwsgAAB/6Zi49AAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCbm5mXmlyUmFZilZhZxMjA6pxfmlfCwAAAdgjrQjMAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCWm5mXmlyUmFZilZSYnZoSX5BfkliSz8jA6pxfmlfCyAAA0JjfIzwAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCam5mXmlyUmFZilZyfn52aEp+UmprGyMDqnF+aV8LIAABHvoQzOwAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCRm5mXmlyUmFZilZyfn52aEp+ckZmcnZrHyMDqnF+aV8LIAAAFDqLAPgAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCfm5mXmlyUmFZiVZ6RmljCyMDqnF+aB6QBQjItdDUAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCfm5mXmlyUmFZilVhQkJPKyMDqnF+aV8LIAACJVKEfNQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCUm5mXmlyUmFZiVZBflJ2ckV/AyMDqnF+aV8LIAAAQaLw1OAAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 3
+            }
+          }
+        }
+      ],
+      "itemsPerContainer": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "probability": 1.0
+    },
+    {
+      "items": [
+        {
+          "weight": 70,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCYm5mXmlyUmFZilZaaWJKRWsTIwOqcX5pXwsgAAOz2jLE3AAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCdm5mXmlyUmFZilVpRkFqUmZqXnBqflF9SkpPKyMDqnF+aV8LIAADFAHMLQQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCfm5mXmlyUmFZiVVySmZzNyMDqnF+aV8LIAAAJ7Zn5NQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 70,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwsCfm5mXmlyUmFZilZaTmVfCyMDqnF8KogF03zZ4NQAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 50,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCUm5mXmlyUmFZilZ+YHZ+Un1jCyMDqnF+aB6QBtttXaDgAAAA="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 50,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCYm5mXmlyUmFZilZKZmJufl8LIwOqcX5pXwsgAABHa1EA3AAAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 100,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/42SwUoDMRCGp7bVusWDPkHMuVdB9mgFQYp40CKIlGl2dhs2m5Qkq5alL+7JaW1VFKWn8MHMNz8zSQDa0L/EiGPyQTsLcPTWgz2dwXGlLSmPeUyVq+YYQgLtiEUCB5kOc4OLHnRusCK4auTUmUym0dc0kDqi0UqmOZrAqJxxXqZyQca4FzmQkV4j851HVWpbiOGHXS4PoTNynnoAsA+u+SniNo8yfWz+VN4HYs2g2bJYw7a68ET2q/hMLp8+QS6h33yD0a/p/8wUcaaDiE7k2mYMJIxTGHmbAm3GtuudbbzZiFaRcPlaZAk9hShW6yZ/yq6HnV1DLirFOoRjlxebMwptxcLVnt9nstH5BWdn8/nOZhZN+XOsElarTAmc3NZT7ryoy1LHMZqaQhtE3Jx4spk8qUjN0GqV1gELCnzoLkALukNX29iCd5JdIWeOAgAA"
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        },
+        {
+          "weight": 50,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCSm5mXmlyUmFZilVmUnxefmZeeX8LIwOqcX5oHpAF78UP0OgAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 2
+            }
+          }
+        },
+        {
+          "weight": 80,
+          "value": {
+            "itemStack": {
+              "nbt": "H4sIAAAAAAAA/+NiYGBm4HZJLEkMSy0qzszPY2Dg/cXBwJSZwiCSm5mXmlyUmFZilZ6fkxKfmZeeX8LIwOqcX5oHpAESE3gROgAAAA=="
+            },
+            "amount": {
+              "minimum": 1,
+              "maximum": 1
+            }
+          }
+        }
+      ],
+      "itemsPerContainer": {
+        "minimum": 1,
+        "maximum": 1
+      },
+      "probability": 1.0
+    }
+  ],
+  "refillTime": 20000
+}

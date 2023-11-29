@@ -1,0 +1,15 @@
+name: SurvivalGames
+version: '${project.version}'
+main: com.mineplex.studio.example.survivalgames.SurvivalGamesPlugin
+api-version: '1.20'
+depend: [StudioEngine]
+commands:
+  game:
+    usage: /game
+    description: Opens the game GUI
+  prefix:
+    usage: /prefix [Prefix]
+    description: Sets or removes your user chat prefix
+  demoworld:
+    usage: /demoworld load/unload/delete <id>
+    description: Demos the world upload system
