@@ -3,6 +3,7 @@ package com.mineplex.studio.example.survivalgames;
 import com.mineplex.studio.example.survivalgames.game.SurvivalGames;
 import com.mineplex.studio.example.survivalgames.modules.chat.SurvivalGamesChatModule;
 import com.mineplex.studio.example.survivalgames.modules.manager.GameManagerModule;
+import com.mineplex.studio.example.survivalgames.modules.prefix.ChatPrefixModule;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModule;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.game.GameCycle;
@@ -47,6 +48,7 @@ public class SurvivalGamesPlugin extends JavaPlugin {
 
         // Setup modules
         MineplexModuleManager.getInstance().registerModule(WorldDemoModule.class, new WorldDemoModule(this));
+        MineplexModuleManager.getInstance().registerModule(ChatPrefixModule.class, new ChatPrefixModule(this));
         MineplexModuleManager.getInstance()
                 .registerModule(SurvivalGamesChatModule.class, new SurvivalGamesChatModule());
         MineplexModuleManager.getInstance().registerModule(GameManagerModule.class, new GameManagerModule(this));
