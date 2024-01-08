@@ -154,7 +154,7 @@ public class BorderMechanic implements GameMechanic<SingleWorldMineplexGame> {
             log.warn("Missing {} data point key, falling back to fallback value.", WORLD_CENTER_KEY);
             return FALLBACK_CENTER.toLocation(world.getMinecraftWorld());
         }
-        return locations.get(0);
+        return locations.getFirst();
     }
 
     /**

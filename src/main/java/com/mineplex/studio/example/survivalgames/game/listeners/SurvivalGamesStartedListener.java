@@ -93,7 +93,7 @@ public class SurvivalGamesStartedListener implements Listener {
         }
         // Spectator
         else {
-            event.getPlayer().teleport(this.game.getSpawnLocations().get(0));
+            event.getPlayer().teleport(this.game.getSpawnLocations().getFirst());
         }
     }
 }
