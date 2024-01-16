@@ -122,6 +122,10 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * The {@link TeamMechanic} is responsible for managing {@link com.mineplex.studio.sdk.modules.game.mechanics.team.GameTeam} and assigning {@link Player} to those.
      */
     private TeamMechanic teamMechanic;
+    /**
+     * The {@link LegacyMechanic} manages all legacy {@link com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic}.
+     */
+    private LegacyMechanic legacyMechanic;
 
     /**
      * The {@link DamageGlowMechanic} applies the {@link PotionEffectType#GLOWING} effect when the {@link Player} receives damages.
@@ -135,19 +139,6 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * The {@link BorderMechanic} dynamically manages the {@link org.bukkit.WorldBorder} of the {@link MineplexWorld} depending on the selected world and {@link Player} count.
      */
     private BorderMechanic borderMechanic;
-
-    private LegacyArmorMechanic legacyArmorMechanic;
-    private LegacyBrewingStandMechanic legacyBrewingStandMechanic;
-    private LegacyCriticalHitMechanic legacyCriticalHitMechanic;
-    private LegacyDamageValuesMechanic legacyDamageValuesMechanic;
-    private LegacyEnchantmentsMechanic legacyEnchantmentsMechanic;
-    private LegacyEnchantmentTableMechanic legacyEnchantmentTableMechanic;
-    private LegacyEnderPearlMechanic legacyEnderPearlMechanic;
-    private LegacyKnockbackMechanic legacyKnockbackMechanic;
-    private LegacyPlayerAttackSpeedMechanic legacyPlayerAttackSpeedMechanic;
-    private LegacyProjectileMechanic legacyProjectileMechanic;
-    private LegacyRegenerationMechanic legacyRegenerationMechanic;
-    private LegacySweepingAttackMechanic legacySweepingAttackMechanic;
 
     /**
      * This {@link Map} maintains a mapping between {@link Player} objects and {@link PlayerState} objects.
@@ -339,56 +330,8 @@ public class SurvivalGames implements SingleWorldMineplexGame {
                 // Event listener that is listening during the STARTED GameState
                 .registerEventListener(new SurvivalGamesStartedListener(this), GameState.STARTED);
 
-        this.legacyKnockbackMechanic = this.gameModule
-                .constructGameMechanic(LegacyKnockbackMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyBrewingStandMechanic = this.gameModule
-                .constructGameMechanic(LegacyBrewingStandMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyCriticalHitMechanic = this.gameModule
-                .constructGameMechanic(LegacyCriticalHitMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyDamageValuesMechanic = this.gameModule
-                .constructGameMechanic(LegacyDamageValuesMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyEnchantmentsMechanic = this.gameModule
-                .constructGameMechanic(LegacyEnchantmentsMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyEnchantmentTableMechanic = this.gameModule
-                .constructGameMechanic(LegacyEnchantmentTableMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyArmorMechanic = this.gameModule
-                .constructGameMechanic(LegacyArmorMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyRegenerationMechanic = this.gameModule
-                .constructGameMechanic(LegacyRegenerationMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyPlayerAttackSpeedMechanic = this.gameModule
-                .constructGameMechanic(LegacyPlayerAttackSpeedMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyProjectileMechanic = this.gameModule
-                .constructGameMechanic(LegacyProjectileMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyDamageValuesMechanic = this.gameModule
-                .constructGameMechanic(LegacyDamageValuesMechanic.class, this)
-                .orElseThrow();
-
-        this.legacySweepingAttackMechanic = this.gameModule
-                .constructGameMechanic(LegacySweepingAttackMechanic.class, this)
-                .orElseThrow();
-
-        this.legacyEnderPearlMechanic = this.gameModule
-                .constructGameMechanic(LegacyEnderPearlMechanic.class, this)
+        this.legacyMechanic = this.gameModule
+                .constructGameMechanic(LegacyMechanic.class, this)
                 .orElseThrow();
 
         this.gameWorldSelectorMechanic = this.gameModule
@@ -423,19 +366,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
 
         this.damageGlowMechanic.setup(this);
 
-        // Legacy mechanics
-        this.legacyArmorMechanic.setup(this);
-        this.legacyBrewingStandMechanic.setup(this);
-        this.legacyCriticalHitMechanic.setup(this);
-        this.legacyDamageValuesMechanic.setup(this);
-        this.legacyEnchantmentsMechanic.setup(this);
-        this.legacyEnchantmentTableMechanic.setup(this);
-        this.legacyEnderPearlMechanic.setup(this);
-        this.legacyKnockbackMechanic.setup(this);
-        this.legacyPlayerAttackSpeedMechanic.setup(this);
-        this.legacyProjectileMechanic.setup(this);
-        this.legacyRegenerationMechanic.setup(this);
-        this.legacySweepingAttackMechanic.setup(this);
+        this.legacyMechanic.setup(this);
 
         this.stateHelperMechanic.setup(this);
     }
@@ -458,20 +389,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         this.gameWorldSelectorMechanic.teardown();
         this.trackingCompassMechanic.teardown();
         this.borderMechanic.teardown();
-
-        // Legacy mechanics
-        this.legacyArmorMechanic.teardown();
-        this.legacyBrewingStandMechanic.teardown();
-        this.legacyCriticalHitMechanic.teardown();
-        this.legacyDamageValuesMechanic.teardown();
-        this.legacyEnchantmentsMechanic.teardown();
-        this.legacyEnchantmentTableMechanic.teardown();
-        this.legacyEnderPearlMechanic.teardown();
-        this.legacyKnockbackMechanic.teardown();
-        this.legacyPlayerAttackSpeedMechanic.teardown();
-        this.legacyProjectileMechanic.teardown();
-        this.legacyRegenerationMechanic.teardown();
-        this.legacySweepingAttackMechanic.teardown();
+        this.legacyMechanic.teardown();
 
         // Cleanup player data
         for (final Player player : this.players.keySet()) {
