@@ -9,6 +9,7 @@ import com.mineplex.studio.example.survivalgames.game.listeners.SurvivalGamesSta
 import com.mineplex.studio.example.survivalgames.game.loot.SurvivalGamesLootMechanic;
 import com.mineplex.studio.example.survivalgames.game.mechanic.BorderMechanic;
 import com.mineplex.studio.example.survivalgames.game.mechanic.DamageGlowMechanic;
+import com.mineplex.studio.example.survivalgames.game.mechanic.HealingSoupMechanic;
 import com.mineplex.studio.example.survivalgames.game.mechanic.TrackingCompassMechanic;
 import com.mineplex.studio.example.survivalgames.game.stat.SurvivalGamesStats;
 import com.mineplex.studio.sdk.i18n.I18nText;
@@ -131,6 +132,10 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * The {@link DamageGlowMechanic} applies the {@link PotionEffectType#GLOWING} effect when the {@link Player} receives damages.
      */
     private DamageGlowMechanic damageGlowMechanic;
+    /**
+     * The {@link HealingSoupMechanic} applies a regeneration effect to a {@link Player} when consuming {@link org.bukkit.Material#MUSHROOM_STEW}.
+     */
+    private HealingSoupMechanic healingSoupMechanic;
     /**
      * The {@link TrackingCompassMechanic} adds a new {@link org.bukkit.inventory.ItemStack} that can be used by the {@link Player} to locate other game participants.
      */
@@ -345,6 +350,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         this.teamMechanic =
                 this.gameModule.constructGameMechanic(TeamMechanic.class, this).orElseThrow();
         this.damageGlowMechanic = new DamageGlowMechanic(this.plugin);
+        this.healingSoupMechanic = new HealingSoupMechanic();
         this.trackingCompassMechanic = new TrackingCompassMechanic(this.plugin);
         this.lootContainerMechanic = new SurvivalGamesLootMechanic(this.trackingCompassMechanic);
         this.borderMechanic = new BorderMechanic();
@@ -365,7 +371,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         this.kitMechanic.registerKit(this, PlayerKit.class, new PlayerKit(this.abilityMechanic, this.kitMechanic));
 
         this.damageGlowMechanic.setup(this);
-
+        this.healingSoupMechanic.setup(this);
         this.legacyMechanic.setup(this);
 
         this.stateHelperMechanic.setup(this);
@@ -381,6 +387,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         // Destroy game mechanics
         this.stateHelperMechanic.teardown();
 
+        this.healingSoupMechanic.teardown();
         this.damageGlowMechanic.teardown();
         this.kitMechanic.teardown();
         this.abilityMechanic.teardown();
