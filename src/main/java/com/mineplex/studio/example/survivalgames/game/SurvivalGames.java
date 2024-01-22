@@ -29,7 +29,6 @@ import com.mineplex.studio.sdk.modules.leaderboard.LeaderboardModule;
 import com.mineplex.studio.sdk.modules.stats.StatsModule;
 import com.mineplex.studio.sdk.modules.world.MineplexWorld;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +45,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -76,6 +76,16 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      */
     public static final I18nText WINNER_WAS = new SurvivalGamesI18nText(
             "GAME_END_WINNER", "<b><yellow><winner></yellow></b> <green>has won the game!</green>");
+
+    /**
+     * The key for the {@link MineplexWorld} center data points.
+     */
+    private static final String WORLD_CENTER_KEY = "CENTER";
+
+    /**
+     * The fallback center position if no data point was found.
+     */
+    private static final Vector FALLBACK_CENTER = new Vector(0, 0, 0);
 
     /**
      * The {@link JavaPlugin} the {@link MineplexGame} is created from.
@@ -185,18 +195,22 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * This method performs the necessary actions to initialize the game after it has started.
      * It cleans up players, teleports them to their spawn points, sets their game mode to adventure,
      * grants them a kit, and assigns teams to players.
-     *
      */
     private void onStart() {
         // Move all players into the game and do the necessary modifications.
-        final List<Location> spawns = this.getSpawnLocations();
+        final List<Location> spawns = new ArrayList<>(this.getSpawnLocations());
+        Collections.shuffle(spawns);
+
+        final Location center = this.getWorldCenter();
+
         this.players.keySet().forEach(player -> {
             // Reset hp, reset inventory, effects, etc...
             this.cleanupPlayer(player);
 
             // Teleport the player to a random spawn point
-            // TODO: FIX DUPLICATING SELECTION
-            final Location spawn = spawns.get(ThreadLocalRandom.current().nextInt(spawns.size()));
+            final Location spawn = this.getLocationAwayFromOtherLocations(spawns, this.players.keySet());
+            // Fix spawn look before teleport
+            this.adjustSpawnLocation(spawn, center);
             player.teleport(spawn, PlayerTeleportEvent.TeleportCause.PLUGIN);
 
             // Adjust player gamemode
@@ -213,6 +227,74 @@ public class SurvivalGames implements SingleWorldMineplexGame {
                         this.getTeamMechanic()
                                 .constructTeamAssigner(SingleTeamAssigner.class)
                                 .orElseThrow());
+    }
+
+    /**
+     * Retrieves the world center location for the current {@link SingleWorldMineplexGame}.
+     * If the data point for the world center is not found it will fallback to {@link SurvivalGames#FALLBACK_CENTER}.
+     *
+     * @return The world center location for the current {@link SingleWorldMineplexGame}.
+     */
+    private Location getWorldCenter() {
+        final MineplexWorld world = this.getGameWorld();
+        final List<Location> locations = world.getDataPoints(WORLD_CENTER_KEY);
+        if (locations.isEmpty()) {
+            log.warn("Missing {} data point key, falling back to fallback value.", WORLD_CENTER_KEY);
+            return FALLBACK_CENTER.toLocation(world.getMinecraftWorld());
+        }
+        return locations.getFirst();
+    }
+
+    /**
+     * Rotates the location to look at the center location.
+     *
+     * @param location the location to rotate
+     * @param center the center to look at
+     */
+    private void adjustSpawnLocation(final Location location, final Location center) {
+        // Center location on block
+        location.add(0.5, 0, 0.5);
+
+        // Look at center location
+        location.setDirection(
+                center.toVector().setY(0).subtract(location.toVector().setY(0)).normalize());
+    }
+
+    /**
+     * Find the best spawn locations for each player.
+     *
+     * @param locations spawn locations
+     * @param players players who can spawn
+     *
+     * @return the best spawn location
+     */
+    private Location getLocationAwayFromOtherLocations(
+            final Iterable<Location> locations, final Iterable<Player> players) {
+        Location bestLocation = null;
+        double bestDist = Double.MIN_VALUE;
+
+        for (final Location location : locations) {
+            double closest = Double.MAX_VALUE;
+
+            for (final Player player : players) {
+                // Different Worlds
+                if (!player.getWorld().equals(location.getWorld())) {
+                    continue;
+                }
+
+                final double distanceSquared = player.getLocation().distanceSquared(location);
+                if (closest >= distanceSquared) {
+                    closest = distanceSquared;
+                }
+            }
+
+            if (closest > bestDist) {
+                bestLocation = location;
+                bestDist = closest;
+            }
+        }
+
+        return bestLocation;
     }
 
     /**
