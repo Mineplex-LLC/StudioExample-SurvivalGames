@@ -1,9 +1,18 @@
-target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+##############################
+## Mineplex
+##############################
 studio-cli-win.exe
-/undefined
+mineplex/
+
+##############################
+## Gradle
+##############################
+bin/
+build/
+.gradle
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
 
 ### IntelliJ IDEA ###
 .idea/modules.xml

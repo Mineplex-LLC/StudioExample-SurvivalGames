@@ -1,11 +1,10 @@
 package com.mineplex.studio.example.survivalgames.modules.prefix;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.PaperCommandManager;
 import com.google.common.util.concurrent.Striped;
 import com.mineplex.studio.example.survivalgames.modules.prefix.commands.PrefixCommand;
 import com.mineplex.studio.example.survivalgames.modules.prefix.data.UserPrefix;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModule;
+import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.modules.MineplexModule;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.data.DataStorageModule;
@@ -52,13 +51,9 @@ public class ChatPrefixModule implements MineplexModule {
     private DataStorageModule dataStorageModule;
 
     /**
-     * Manages register and unregister of {@link Command}.
-     */
-    private PaperCommandManager commandManager;
-    /**
      * Command to control {@link WorldDemoModule}.
      */
-    private BaseCommand command;
+    private Command command;
     /**
      * Contains all {@link Listener} logics for this module.
      */
@@ -70,9 +65,8 @@ public class ChatPrefixModule implements MineplexModule {
     @Override
     public void setup() {
         // Setup command
-        this.commandManager = new PaperCommandManager(this.plugin);
         this.command = new PrefixCommand(this);
-        this.commandManager.registerCommand(this.command);
+        CommandUtil.register(this.command);
 
         // Setup listener
         this.dataStorageModule = MineplexModuleManager.getRegisteredModule(DataStorageModule.class);
@@ -86,8 +80,7 @@ public class ChatPrefixModule implements MineplexModule {
     @Override
     public void teardown() {
         // Teardown command
-        this.commandManager.unregisterCommand(this.command);
-        this.commandManager = null;
+        CommandUtil.unRegister(this.command);
         this.command = null;
 
         // Teardown listener

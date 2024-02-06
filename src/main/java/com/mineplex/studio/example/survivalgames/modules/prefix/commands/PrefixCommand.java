@@ -1,24 +1,29 @@
 package com.mineplex.studio.example.survivalgames.modules.prefix.commands;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Description;
-import co.aikar.commands.annotation.Syntax;
 import com.mineplex.studio.example.survivalgames.SurvivalGamesI18nText;
 import com.mineplex.studio.example.survivalgames.modules.prefix.ChatPrefixModule;
 import com.mineplex.studio.sdk.i18n.I18nText;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a {@link org.bukkit.command.Command} for setting or removing a {@link Player} prefix.
  */
-@RequiredArgsConstructor
-@CommandAlias("prefix")
-public class PrefixCommand extends BaseCommand {
+public class PrefixCommand extends Command {
+    /**
+     * The name of the command.
+     */
+    private static final String COMMAND_NAME = "prefix";
+    /**
+     * The syntax of the command.
+     */
+    private static final String COMMAND_SYNTAX = "<prefix> or empty to reset";
+
     // Messages
     /**
      * The {@link I18nText} for a successful removed prefix.
@@ -39,22 +44,28 @@ public class PrefixCommand extends BaseCommand {
      */
     private final ChatPrefixModule module;
 
+    public PrefixCommand(final ChatPrefixModule module) {
+        super(COMMAND_NAME, "", String.format("/%s %s", COMMAND_NAME, COMMAND_SYNTAX), List.of());
+
+        this.module = module;
+    }
+
     /**
      * Sets the prefix for a {@link Player}.
-     *
-     * @param player the player for whom the prefix will be set
-     * @param args   the arguments passed to the command. If empty, the prefix will be reset.
      */
-    @Default
-    @Syntax("<prefix> or empty to reset")
-    @Description("Set your own prefix.")
-    public void onCommand(final Player player, final String[] args) {
+    @Override
+    public boolean execute(
+            @NotNull final CommandSender commandSender, @NotNull final String s, @NotNull final String[] args) {
+        if (!(commandSender instanceof final Player player)) {
+            return false;
+        }
+
         // Reset the prefix
         if (args.length == 0) {
             this.module.removePrefix(player);
             final Component message = MiniMessage.miniMessage().deserialize(PREFIX_REMOVE.getText(player.locale()));
             player.sendMessage(message);
-            return;
+            return true;
         }
 
         // Set new prefix
@@ -62,5 +73,6 @@ public class PrefixCommand extends BaseCommand {
         this.module.updatePrefix(player, prefix);
         final Component message = MiniMessage.miniMessage().deserialize(PREFIX_SET.getText(player.locale()));
         player.sendMessage(message);
+        return true;
     }
 }

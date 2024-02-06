@@ -1,10 +1,9 @@
 package com.mineplex.studio.example.survivalgames.modules.manager;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.PaperCommandManager;
 import com.mineplex.studio.example.survivalgames.modules.manager.commands.GameCommand;
 import com.mineplex.studio.example.survivalgames.modules.manager.ui.GameGUI;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModule;
+import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.gui.MineplexGUI;
 import com.mineplex.studio.sdk.modules.MineplexModule;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
@@ -14,18 +13,12 @@ import com.mineplex.studio.sdk.modules.game.MineplexGame;
 import com.mineplex.studio.sdk.modules.game.MineplexGameModule;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.command.Command;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * A demo {@link MineplexModule} showing a use case of {@link MineplexGUI} to stop the running game.
  */
 @RequiredArgsConstructor
 public class GameManagerModule implements MineplexModule {
-    /**
-     * The {@link JavaPlugin} the {@link MineplexModule} is created from.
-     */
-    private final JavaPlugin plugin;
-
     // Modules
     /**
      * The {@link MineplexGameModule} is responsible for managing the {@link GameCycle} and to construct new {@link GameCycle} for {@link MineplexGame}.
@@ -33,13 +26,9 @@ public class GameManagerModule implements MineplexModule {
     private MineplexGameModule gameModule;
 
     /**
-     * Manages register and unregister of {@link Command}.
-     */
-    private PaperCommandManager commandManager;
-    /**
      * Command to control {@link WorldDemoModule}.
      */
-    private BaseCommand command;
+    private Command command;
 
     /**
      * Method called to allocate any additional resources this module uses
@@ -49,9 +38,8 @@ public class GameManagerModule implements MineplexModule {
         this.gameModule = MineplexModuleManager.getRegisteredModule(MineplexGameModule.class);
 
         // Setup command
-        this.commandManager = new PaperCommandManager(this.plugin);
         this.command = new GameCommand(new GameGUI(this));
-        this.commandManager.registerCommand(this.command);
+        CommandUtil.register(this.command);
     }
 
     /**
@@ -59,9 +47,7 @@ public class GameManagerModule implements MineplexModule {
      */
     @Override
     public void teardown() {
-        // Teardown command
-        this.commandManager.unregisterCommand(this.command);
-        this.commandManager = null;
+        CommandUtil.unRegister(this.command);
         this.command = null;
     }
 

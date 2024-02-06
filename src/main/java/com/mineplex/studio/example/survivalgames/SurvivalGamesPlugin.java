@@ -15,6 +15,8 @@ import com.mineplex.studio.sdk.modules.world.MineplexWorldModule;
 import com.mineplex.studio.sdk.modules.world.config.MineplexWorldConfig;
 import com.mineplex.studio.sdk.modules.world.config.WorldCreationConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -46,12 +48,15 @@ public class SurvivalGamesPlugin extends JavaPlugin {
     public void onEnable() {
         log.info("Starting plugin!");
 
+        final CraftServer craftServer = (CraftServer) Bukkit.getServer();
+        System.out.println("Server: " + craftServer.minimumAPI);
+
         // Setup modules
-        MineplexModuleManager.getInstance().registerModule(WorldDemoModule.class, new WorldDemoModule(this));
+        MineplexModuleManager.getInstance().registerModule(WorldDemoModule.class, new WorldDemoModule());
         MineplexModuleManager.getInstance().registerModule(ChatPrefixModule.class, new ChatPrefixModule(this));
         MineplexModuleManager.getInstance()
                 .registerModule(SurvivalGamesChatModule.class, new SurvivalGamesChatModule());
-        MineplexModuleManager.getInstance().registerModule(GameManagerModule.class, new GameManagerModule(this));
+        MineplexModuleManager.getInstance().registerModule(GameManagerModule.class, new GameManagerModule());
 
         // Create and load the lobby
         final MineplexWorldModule mineplexWorldModule =

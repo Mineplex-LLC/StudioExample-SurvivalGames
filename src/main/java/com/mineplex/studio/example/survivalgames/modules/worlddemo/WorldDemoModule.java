@@ -1,8 +1,7 @@
 package com.mineplex.studio.example.survivalgames.modules.worlddemo;
 
-import co.aikar.commands.BaseCommand;
-import co.aikar.commands.PaperCommandManager;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.commands.DemoWorldCommand;
+import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.modules.MineplexModule;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.world.MineplexWorld;
@@ -13,7 +12,6 @@ import java.util.concurrent.CompletableFuture;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.command.Command;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * A demo {@link MineplexModule} using the persistence world feature of {@link MineplexWorldModule}.
@@ -22,13 +20,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 @Setter
 public class WorldDemoModule implements MineplexModule {
     /**
-     * Manages register and unregister of {@link Command}.
-     */
-    private PaperCommandManager commandManager;
-    /**
      * Command to control {@link WorldDemoModule}.
      */
-    private BaseCommand command;
+    private Command command;
 
     /**
      * The {@link MineplexWorldModule} manges the creation and loading of temporary and persistence {@link MineplexWorld}.
@@ -42,11 +36,8 @@ public class WorldDemoModule implements MineplexModule {
 
     /**
      * Initializes a new instance of the WorldDemoModule class, with the given JavaPlugin instance.
-     *
-     * @param plugin The JavaPlugin instance to use for initializing the WorldDemoModule.
      */
-    public WorldDemoModule(final JavaPlugin plugin) {
-        this.commandManager = new PaperCommandManager(plugin);
+    public WorldDemoModule() {
         this.command = new DemoWorldCommand(this);
     }
 
@@ -56,7 +47,7 @@ public class WorldDemoModule implements MineplexModule {
     @Override
     public void setup() {
         this.worldModule = MineplexModuleManager.getRegisteredModule(MineplexWorldModule.class);
-        this.commandManager.registerCommand(this.command);
+        CommandUtil.register(this.command);
     }
 
     /**
@@ -64,10 +55,8 @@ public class WorldDemoModule implements MineplexModule {
      */
     @Override
     public void teardown() {
-        this.commandManager.unregisterCommand(this.command);
-
+        CommandUtil.unRegister(this.command);
         this.command = null;
-        this.commandManager = null;
     }
 
     /**
