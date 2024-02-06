@@ -1,0 +1,7 @@
+productId: respawn
+productName: Respawn
+productDescription: Respawns you at your last death location.
+price: 10000
+callbackDelivery: ALLOW_OFFLINE_DELIVERY
+namespaceId: SG
+repeatablePurchase: true

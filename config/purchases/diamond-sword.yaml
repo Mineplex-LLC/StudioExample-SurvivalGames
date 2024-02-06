@@ -1,0 +1,7 @@
+productId: diamond-sword
+productName: Diamond Sword
+productDescription: Spawn with a diamond sword.
+price: 1000
+callbackDelivery: ALLOW_OFFLINE_DELIVERY
+namespaceId: SG
+repeatablePurchase: false

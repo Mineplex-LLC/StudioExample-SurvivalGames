@@ -11,15 +11,36 @@
 
 ## About The Project
 
-Text
+This project is a basic Survival Games implementation for the Mineplex Studio platform with the purpose
+of showcasing the capabilities of the Mineplex Studio environment.
+
+Access to the close alpha is required to use the Mineplex SDK and Studio Client.
+This project is not intended to be used as a standalone game,
+but rather as a reference for developers to understand how to use the Mineplex SDK and Studio Client to
+create games for the Mineplex Studio platform.
 
 ## Features
 
-Explain in bullet points what is implemented atm
+* Mechanics
+    * Chest loot mechanic with different tiers and respawn times
+    * Simple border mechanic that shrinks over time
+    * Tracking compass that can be found in chests that points to the nearest player
+    * Healing soups that can be found in the chests and heal the player for consumption
+    * Damage glow mechanic that applies a glow effect to players that have taken damage
+
+
+* Abilities
+    * Invisibility ability that allows the player to become invisible for a short period of time
+    * Weightless ability that allows the player to negate fall damage
+
+
+* Modules
+    * Custom chat renderer with player stats and custom prefixes (/prefix)
+    * Demo world module that showcases the capabilities of the persistence module (/demoworld)
 
 ## Requirements
 
-- Java 17+
+- Java 21+
 - Mineplex SDK (Not available during closed alpha)
 - Mineplex Studio Client (Not available during closed alpha)
 
@@ -30,7 +51,7 @@ Run the following command on your local environment:
 ```shell
 git clone --depth=1 https://github.com/Mineplex-LLC/Studio-Example-SurvivalGames.git project-name
 cd project-name
-mvn clean install -U -s settings.xml
+gradlew clean buildPluginJar
 ```
 
 Then, you need to search for `#REPLACE-ME` and follow those instructions.
@@ -45,19 +66,20 @@ Finally, follow the studio client instructions on how to start your dev server.
 ├── .github                         # GitHub folder
 ├── assets
 │   ├── configs                     # Game specific configurations (Currently used for loot tables)
-│   ├── internationalization        # Localization files (ADD FILE PATTERN)
+│   ├── internationalization        # Localization files
 │   ├── mixin                       # Mixin jar location
 │   └── world-templates             # World templates
 ├── config
-│   ├── purchases                   # #ALEX-FILL-THIS
-│   ├── subscriptions               # #ALEX-FILL-THIS
+│   ├── purchases                   # Purchasable item configurations
+│   ├── subscriptions               # Subscription item configurations
 │   └── game-properties.yaml        # Game configuration
 ├── src/main/java/com/mineplex/studio/example/survivalgames
 │   ├── game                        # Game specific logic
 │   ├── modules                     # Module specific logic
 │   ├── SurvivalGamesI18nText.java  # Internationalization wrapper
 │   └── SurvivalGamesPlugin.java    # Plugin entry point
-├── pom.xml                         # Maven configuration
+├── build.gradle.kts                # Gradle build configuration
+├── settings.gradle.kts             # Gradle settings file
 └── .gitignore                      # GIT ignore configuration
 ```
 
@@ -65,15 +87,18 @@ Finally, follow the studio client instructions on how to start your dev server.
 
 SOFTWARE USAGE LICENSE AGREEMENT
 
-This Software Usage License Agreement (the "Agreement") is entered into between Mineplex Studios LLC ("Licensor"), and the user of the software ("Licensee").
+This Software Usage License Agreement (the "Agreement") is entered into between Mineplex Studios LLC ("Licensor"), and
+the user of the software ("Licensee").
 
 1. Definitions
 
-1.1. "Software" refers to the Studio-Example-SurvivalGames repository provided by Licensor, including all associated files, documentation, and any updates or modifications.
+1.1. "Software" refers to the Studio-Example-SurvivalGames repository provided by Licensor, including all associated
+files, documentation, and any updates or modifications.
 
 2. License Grant
 
-2.1. Subject to the terms and conditions of this Agreement, Licensor hereby grants Licensee a non-exclusive, non-transferable, revocable license to use the Software for the purposes outlined in this Agreement.
+2.1. Subject to the terms and conditions of this Agreement, Licensor hereby grants Licensee a non-exclusive,
+non-transferable, revocable license to use the Software for the purposes outlined in this Agreement.
 
 3. Permitted Use
 
@@ -106,7 +131,8 @@ b) Remove or alter any copyright, trademark, or other proprietary notices from t
 
 9. Limitation of Liability
 
-9.1. Licensor shall not be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with the Software.
+9.1. Licensor shall not be liable for any indirect, incidental, special, or consequential damages arising out of or in
+connection with the Software.
 
 10. Governing Law
 
@@ -114,7 +140,8 @@ b) Remove or alter any copyright, trademark, or other proprietary notices from t
 
 11. Entire Agreement
 
-11.1. This Agreement constitutes the entire agreement between the parties concerning the Software and supersedes all prior agreements and understandings.
+11.1. This Agreement constitutes the entire agreement between the parties concerning the Software and supersedes all
+prior agreements and understandings.
 
 By accepting this Agreement, Licensee acknowledges that they have read, understood, and agree to be bound by its terms.
 
