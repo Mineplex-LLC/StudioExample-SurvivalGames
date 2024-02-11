@@ -1,0 +1,6 @@
+# DO NOT EDIT: this project ID is unique to your repository and should not be changed
+projectId: #REPLACE-ME REPLACE WITH GIVEN PROJECT ID
+
+# CONFIGURATION: the following properties are used to configure the studio and can be edited directly
+game:
+  name: SurvivalGames
