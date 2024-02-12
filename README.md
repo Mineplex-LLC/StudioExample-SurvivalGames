@@ -49,7 +49,7 @@ create games for the Mineplex Studio platform.
 Run the following command on your local environment:
 
 ```shell
-git clone --depth=1 https://github.com/Mineplex-LLC/Studio-Example-SurvivalGames.git project-name
+git clone --depth=1 https://github.com/Mineplex-LLC/StudioExample-SurvivalGames.git project-name
 cd project-name
 gradlew clean buildPluginJar
 ```
@@ -92,7 +92,7 @@ the user of the software ("Licensee").
 
 1. Definitions
 
-1.1. "Software" refers to the Studio-Example-SurvivalGames repository provided by Licensor, including all associated
+1.1. "Software" refers to the StudioExample-SurvivalGames repository provided by Licensor, including all associated
 files, documentation, and any updates or modifications.
 
 2. License Grant
