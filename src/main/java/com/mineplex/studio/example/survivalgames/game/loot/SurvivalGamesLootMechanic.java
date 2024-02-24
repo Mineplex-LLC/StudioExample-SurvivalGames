@@ -90,9 +90,7 @@ public class SurvivalGamesLootMechanic implements GameMechanic<SurvivalGames> {
         }
 
         // Setup LootContainerMechanic
-        this.lootMechanic = game.getGameModule()
-                .constructGameMechanic(LootContainerMechanic.class, game)
-                .orElseThrow();
+        this.lootMechanic = game.getMechanicFactory().construct(LootContainerMechanic.class);
         this.lootMechanic.register(tierOneType);
         this.lootMechanic.register(tierTwoType);
         this.lootMechanic.setup(game);

@@ -94,7 +94,12 @@ public class SurvivalGames implements SingleWorldMineplexGame {
 
     // Modules
     /**
-     * The {@link MineplexGameModule} is responsible for managing the {@link GameCycle} and to construct new {@link GameCycle} for {@link MineplexGame}.
+     * The {@link MineplexGameMechanicFactory} is responsible for constructing {@link com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic}.
+     */
+    private final MineplexGameMechanicFactory mechanicFactory =
+            MineplexModuleManager.getRegisteredModule(MineplexGameMechanicFactory.class);
+    /**
+     * The {@link MineplexGameModule} is responsible for managing the {@link GameCycle}.
      */
     private final MineplexGameModule gameModule = MineplexModuleManager.getRegisteredModule(MineplexGameModule.class);
     /**
@@ -400,9 +405,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
     @Override
     public void setup() {
         //noinspection unchecked
-        this.stateHelperMechanic = (GameStateListenerHelperMechanic<SurvivalGames>) this.gameModule
-                .constructGameMechanic(GameStateListenerHelperMechanic.class, this)
-                .orElseThrow();
+        this.stateHelperMechanic = this.mechanicFactory.construct(GameStateListenerHelperMechanic.class);
         this.stateHelperMechanic
                 // Function run once when the GameState changes to PRE_START
                 .registerRunnable(this::onPreStart, GameState.PRE_START)
@@ -417,20 +420,12 @@ public class SurvivalGames implements SingleWorldMineplexGame {
                 // Event listener that is listening during the STARTED GameState
                 .registerEventListener(new SurvivalGamesStartedListener(this), GameState.STARTED);
 
-        this.legacyMechanic = this.gameModule
-                .constructGameMechanic(LegacyMechanic.class, this)
-                .orElseThrow();
+        this.legacyMechanic = this.mechanicFactory.construct(LegacyMechanic.class);
 
-        this.gameWorldSelectorMechanic = this.gameModule
-                .constructGameMechanic(GameWorldSelectorMechanic.class, this)
-                .orElseThrow();
-        this.kitMechanic =
-                this.gameModule.constructGameMechanic(KitMechanic.class, this).orElseThrow();
-        this.abilityMechanic = this.gameModule
-                .constructGameMechanic(AbilityMechanic.class, this)
-                .orElseThrow();
-        this.teamMechanic =
-                this.gameModule.constructGameMechanic(TeamMechanic.class, this).orElseThrow();
+        this.gameWorldSelectorMechanic = this.mechanicFactory.construct(GameWorldSelectorMechanic.class);
+        this.kitMechanic = this.mechanicFactory.construct(KitMechanic.class);
+        this.abilityMechanic = this.mechanicFactory.construct(AbilityMechanic.class);
+        this.teamMechanic = this.mechanicFactory.construct(TeamMechanic.class);
         this.damageGlowMechanic = new DamageGlowMechanic(this.plugin);
         this.healingSoupMechanic = new HealingSoupMechanic();
         this.trackingCompassMechanic = new TrackingCompassMechanic(this.plugin);

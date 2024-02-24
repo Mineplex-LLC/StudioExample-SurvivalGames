@@ -106,9 +106,7 @@ public class BorderMechanic implements GameMechanic<SingleWorldMineplexGame> {
         this.initialBorder = this.calculateInitialBorder();
 
         //noinspection unchecked
-        this.stateHelperMechanic = (GameStateListenerHelperMechanic<SingleWorldMineplexGame>) game.getGameModule()
-                .constructGameMechanic(GameStateListenerHelperMechanic.class, game)
-                .orElseThrow();
+        this.stateHelperMechanic = game.getGameMechanicFactory().construct(GameStateListenerHelperMechanic.class);
 
         this.stateHelperMechanic
                 // Function run once when the GameState changes to STARTED

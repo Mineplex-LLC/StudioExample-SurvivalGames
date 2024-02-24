@@ -6,6 +6,7 @@ import com.mineplex.studio.example.survivalgames.modules.prefix.data.UserPrefix;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModule;
 import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.modules.MineplexModule;
+import com.mineplex.studio.sdk.modules.MineplexModuleImplementation;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.data.DataStorageModule;
 import java.util.Map;
@@ -27,6 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * A demo {@link MineplexModule} showing a use case for {@link DataStorageModule}.
  */
 @RequiredArgsConstructor
+@MineplexModuleImplementation(ChatPrefixModule.class)
 public class ChatPrefixModule implements MineplexModule {
     /**
      * {@link ReadWriteLock} instance for allowing multiple read and write operations.

@@ -6,6 +6,7 @@ import com.mineplex.studio.example.survivalgames.game.stat.SurvivalGamesStats;
 import com.mineplex.studio.example.survivalgames.modules.prefix.ChatPrefixModule;
 import com.mineplex.studio.sdk.i18n.I18nText;
 import com.mineplex.studio.sdk.modules.MineplexModule;
+import com.mineplex.studio.sdk.modules.MineplexModuleImplementation;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.chat.BuiltInChatChannel;
 import com.mineplex.studio.sdk.modules.chat.ChatModule;
@@ -26,6 +27,7 @@ import org.bukkit.entity.Player;
  * for setting up the {@link com.mineplex.studio.example.survivalgames.game.SurvivalGames} chat system,
  * including adding prefixes and handling the rendering of chat messages.
  */
+@MineplexModuleImplementation(SurvivalGamesChatModule.class)
 public class SurvivalGamesChatModule implements MineplexModule {
     // Messages
     /**

@@ -6,6 +6,7 @@ import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModu
 import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.gui.MineplexGUI;
 import com.mineplex.studio.sdk.modules.MineplexModule;
+import com.mineplex.studio.sdk.modules.MineplexModuleImplementation;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.game.GameCycle;
 import com.mineplex.studio.sdk.modules.game.GameState;
@@ -18,6 +19,7 @@ import org.bukkit.command.Command;
  * A demo {@link MineplexModule} showing a use case of {@link MineplexGUI} to stop the running game.
  */
 @RequiredArgsConstructor
+@MineplexModuleImplementation(GameManagerModule.class)
 public class GameManagerModule implements MineplexModule {
     // Modules
     /**

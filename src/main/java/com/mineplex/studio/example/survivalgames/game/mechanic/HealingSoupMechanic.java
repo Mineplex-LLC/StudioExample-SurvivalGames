@@ -40,9 +40,7 @@ public class HealingSoupMechanic implements GameMechanic<MineplexGame> {
         this.game = game;
 
         //noinspection unchecked
-        this.stateHelperMechanic = (GameStateListenerHelperMechanic<MineplexGame>) game.getGameModule()
-                .constructGameMechanic(GameStateListenerHelperMechanic.class, game)
-                .orElseThrow();
+        this.stateHelperMechanic = game.getGameMechanicFactory().construct(GameStateListenerHelperMechanic.class);
 
         // Event listener that is listening during the STARTED GameState
         this.stateHelperMechanic.registerEventListener(this, GameState.STARTED);

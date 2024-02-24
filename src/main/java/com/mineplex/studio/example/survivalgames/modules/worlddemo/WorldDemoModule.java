@@ -3,6 +3,7 @@ package com.mineplex.studio.example.survivalgames.modules.worlddemo;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.commands.DemoWorldCommand;
 import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.modules.MineplexModule;
+import com.mineplex.studio.sdk.modules.MineplexModuleImplementation;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.world.MineplexWorld;
 import com.mineplex.studio.sdk.modules.world.MineplexWorldModule;
@@ -18,6 +19,7 @@ import org.bukkit.command.Command;
  */
 @Getter
 @Setter
+@MineplexModuleImplementation(WorldDemoModule.class)
 public class WorldDemoModule implements MineplexModule {
     /**
      * Command to control {@link WorldDemoModule}.
