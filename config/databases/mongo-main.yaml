@@ -1,3 +1,3 @@
-databaseName: "main-mongo-database"
-namespace: "studio-examples"
-type: "MONGO" # can be one of MYSQL, POSTGRES, or MONGO
+databaseName: main-mongo-database
+namespaceId: studio-examples
+type: MONGO # can be one of MYSQL, POSTGRES, or MONGO
