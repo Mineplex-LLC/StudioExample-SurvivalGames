@@ -4,4 +4,4 @@ subscriptionDescription: Become the lord of this game.
 price: 1000000
 subscriptionBasis: QUARTERLY
 callbackDelivery: ALLOW_OFFLINE_DELIVERY
-namespaceId: SG
+namespaceId: studio-examples
