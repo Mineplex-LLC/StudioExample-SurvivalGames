@@ -1,6 +1,5 @@
 package com.mineplex.studio.example.survivalgames.game;
 
-import com.mineplex.studio.example.survivalgames.SurvivalGamesI18nText;
 import com.mineplex.studio.example.survivalgames.SurvivalGamesPlugin;
 import com.mineplex.studio.example.survivalgames.game.kit.PlayerKit;
 import com.mineplex.studio.example.survivalgames.game.listeners.SurvivalGamesListener;
@@ -12,31 +11,34 @@ import com.mineplex.studio.example.survivalgames.game.mechanic.DamageGlowMechani
 import com.mineplex.studio.example.survivalgames.game.mechanic.HealingSoupMechanic;
 import com.mineplex.studio.example.survivalgames.game.mechanic.TrackingCompassMechanic;
 import com.mineplex.studio.example.survivalgames.game.stat.SurvivalGamesStats;
-import com.mineplex.studio.sdk.i18n.I18nText;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.game.*;
 import com.mineplex.studio.sdk.modules.game.event.PlayerStateChangeEvent;
 import com.mineplex.studio.sdk.modules.game.event.PostMineplexGameStateChangeEvent;
 import com.mineplex.studio.sdk.modules.game.event.PreMineplexGameStateChangeEvent;
+import com.mineplex.studio.sdk.modules.game.helper.GameStateTracker;
+import com.mineplex.studio.sdk.modules.game.helper.PlayerStateTracker;
 import com.mineplex.studio.sdk.modules.game.mechanics.GameWorldSelectorMechanic;
 import com.mineplex.studio.sdk.modules.game.mechanics.ability.AbilityMechanic;
 import com.mineplex.studio.sdk.modules.game.mechanics.helper.GameStateListenerHelperMechanic;
 import com.mineplex.studio.sdk.modules.game.mechanics.kit.KitMechanic;
 import com.mineplex.studio.sdk.modules.game.mechanics.legacy.*;
+import com.mineplex.studio.sdk.modules.game.mechanics.spectator.SpectatorLocationHandler;
+import com.mineplex.studio.sdk.modules.game.mechanics.spectator.SpectatorMechanic;
+import com.mineplex.studio.sdk.modules.game.mechanics.spectator.SpectatorStateHandler;
 import com.mineplex.studio.sdk.modules.game.mechanics.team.TeamMechanic;
 import com.mineplex.studio.sdk.modules.game.mechanics.team.assigners.SingleTeamAssigner;
 import com.mineplex.studio.sdk.modules.leaderboard.LeaderboardModule;
 import com.mineplex.studio.sdk.modules.stats.StatsModule;
 import com.mineplex.studio.sdk.modules.world.MineplexWorld;
+import com.mineplex.studio.sdk.util.selector.BuiltInGameStateSelector;
 import java.util.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Delegate;
 import lombok.extern.slf4j.Slf4j;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -59,24 +61,6 @@ import org.jetbrains.annotations.NotNull;
 @RequiredArgsConstructor
 @Getter
 public class SurvivalGames implements SingleWorldMineplexGame {
-    // Messages
-    /**
-     * The {@link I18nText} for the player team name.
-     */
-    public static final I18nText PLAYERS_TEAM_NAME = new SurvivalGamesI18nText("GAME_TEAM_PLAYER", "Players");
-    /**
-     * The {@link I18nText} for the game win message without winners.
-     * This message follows the {@link MiniMessage} format.
-     */
-    public static final I18nText NO_WINNER = new SurvivalGamesI18nText(
-            "GAME_END_NO_WINNER", "<red>The game has ended with no winner. Better luck next time!</red>");
-    /**
-     * The {@link I18nText} for the game win message with winners.
-     * This message follows the {@link MiniMessage} format.
-     */
-    public static final I18nText WINNER_WAS = new SurvivalGamesI18nText(
-            "GAME_END_WINNER", "<b><yellow><winner></yellow></b> <green>has won the game!</green>");
-
     /**
      * The key for the {@link MineplexWorld} center data points.
      */
@@ -96,7 +80,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
     /**
      * The {@link MineplexGameMechanicFactory} is responsible for constructing {@link com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic}.
      */
-    private final MineplexGameMechanicFactory mechanicFactory =
+    private final MineplexGameMechanicFactory gameMechanicFactory =
             MineplexModuleManager.getRegisteredModule(MineplexGameMechanicFactory.class);
     /**
      * The {@link MineplexGameModule} is responsible for managing the {@link GameCycle}.
@@ -118,6 +102,10 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * The {@link GameStateListenerHelperMechanic} is a helper class to register {@link GameState} based {@link org.bukkit.event.Listener} and {@link org.bukkit.scheduler.BukkitTask}.
      */
     private GameStateListenerHelperMechanic<SurvivalGames> stateHelperMechanic;
+    /**
+     * The {@link SpectatorMechanic} is responsible for managing game spec and respawn logic.
+     */
+    private SpectatorMechanic spectatorMechanic;
     /**
      * The {@link AbilityMechanic} is responsible for managing the game {@link com.mineplex.studio.sdk.modules.game.mechanics.ability.Ability}.
      */
@@ -161,13 +149,10 @@ public class SurvivalGames implements SingleWorldMineplexGame {
     private BorderMechanic borderMechanic;
 
     /**
-     * This {@link Map} maintains a mapping between {@link Player} objects and {@link PlayerState} objects.
+     * Utility to simplify the player state tracking.
      */
-    private final Map<Player, PlayerState> players = new HashMap<>();
-    /**
-     * A {@link Set} containing all {@link Player} with the {@link PlayerState#isAlive}.
-     */
-    private final Set<Player> alivePlayers = Collections.newSetFromMap(new WeakHashMap<>());
+    @Delegate
+    private final PlayerStateTracker playerStateTracker = new PlayerStateTracker(this, BuiltInPlayerState.SPECTATOR);
 
     /**
      * Sets the minimum number of players required for this {@link MineplexGame} to start.
@@ -178,12 +163,13 @@ public class SurvivalGames implements SingleWorldMineplexGame {
     private int minPlayers = 2;
 
     /**
-     * Represents the current {@link GameState} of this {@link MineplexGame} instance.
+     * Utility to simplify the game state tracking.
      */
-    private GameState gameState = GameState.PREPARING;
+    @Delegate
+    private final GameStateTracker gameStateTracker = new GameStateTracker(this, BuiltInGameState.PREPARING);
 
     /**
-     * Method triggered when the {@link GameState} is set to {@link GameState#PRE_START}.
+     * Method triggered when the {@link GameState} is set to {@link GameState#isReady}.
      * <p>
      * This method adds all online players to the game and checks the game start condition.
      */
@@ -195,7 +181,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
     }
 
     /**
-     * Method triggered when the {@link GameState} is set to {@link GameState#STARTED}.
+     * Method triggered when the {@link GameState} is set to {@link GameState#isInProgress}.
      * <p>
      * This method performs the necessary actions to initialize the game after it has started.
      * It cleans up players, teleports them to their spawn points, sets their game mode to adventure,
@@ -208,12 +194,13 @@ public class SurvivalGames implements SingleWorldMineplexGame {
 
         final Location center = this.getWorldCenter();
 
-        this.players.keySet().forEach(player -> {
+        this.getPlayerStates().keySet().forEach(player -> {
             // Reset hp, reset inventory, effects, etc...
             this.cleanupPlayer(player);
 
             // Teleport the player to a random spawn point
-            final Location spawn = this.getLocationAwayFromOtherLocations(spawns, this.players.keySet());
+            final Location spawn = this.getLocationAwayFromOtherLocations(
+                    spawns, this.getPlayerStates().keySet());
             // Fix spawn look before teleport
             this.adjustSpawnLocation(spawn, center);
             player.teleport(spawn, PlayerTeleportEvent.TeleportCause.PLUGIN);
@@ -228,7 +215,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         // Assign all alive players to the player team
         this.getTeamMechanic()
                 .assignTeams(
-                        new ArrayList<>(this.players.keySet()),
+                        new ArrayList<>(this.getPlayerStates().keySet()),
                         this.getTeamMechanic()
                                 .constructTeamAssigner(SingleTeamAssigner.class)
                                 .orElseThrow());
@@ -254,7 +241,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * Rotates the location to look at the center location.
      *
      * @param location the location to rotate
-     * @param center the center to look at
+     * @param center   the center to look at
      */
     private void adjustSpawnLocation(final Location location, final Location center) {
         // Center location on block
@@ -269,8 +256,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * Find the best spawn locations for each player.
      *
      * @param locations spawn locations
-     * @param players players who can spawn
-     *
+     * @param players   players who can spawn
      * @return the best spawn location
      */
     private Location getLocationAwayFromOtherLocations(
@@ -302,36 +288,35 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         return bestLocation;
     }
 
+    private List<Player> getAlivePlayers() {
+        return this.getPlayerStates().entrySet().stream()
+                .filter(entry -> entry.getValue().isAlive())
+                .map(Map.Entry::getKey)
+                .toList();
+    }
+
     /**
-     * Method triggered when the {@link GameState} is set to {@link GameState#ENDED}.
+     * Method triggered when the {@link GameState} is set to {@link GameState#isEnded}.
      * <p>
      * This method is responsible for handling the actions that occur when the game ends.
      * If there are no alive players, it sends a message to all online players indicating that there was no winner
      * and sets their game mode to spectator. If there is a winner, it sends a message to all online players
      * indicating who the winner was, sets their game mode to spectator, and awards them with win stats and leaderboard score.
-     * Finally, it sets the {@link GameState} to {@link GameState#CLEANING_UP}.
-     *
      */
     private void onEnded() {
+        final List<Player> alivePlayers = this.getAlivePlayers();
         // Check if a player is still alive or if the game ended without a winner
-        if (this.alivePlayers.isEmpty()) {
+        if (alivePlayers.isEmpty()) {
             // Inform all players that the game has no winner
             for (final Player online : Bukkit.getOnlinePlayers()) {
-                online.sendMessage(
-                        MiniMessage.miniMessage().deserialize(SurvivalGames.NO_WINNER.getText(online.locale())));
-                online.setGameMode(GameMode.SPECTATOR);
+                SurvivalGamesMessageComponent.GAME_END_NO_WINNER.send(online);
             }
         } else {
-            final Player winner = this.alivePlayers.iterator().next();
+            final Player winner = alivePlayers.getFirst();
 
             // Inform all players of the winner
             for (final Player online : Bukkit.getOnlinePlayers()) {
-                online.sendMessage(MiniMessage.miniMessage()
-                        .deserialize(
-                                SurvivalGames.WINNER_WAS.getText(online.locale()),
-                                Placeholder.parsed("winner", winner.getName())));
-
-                online.setGameMode(GameMode.SPECTATOR);
+                SurvivalGamesMessageComponent.GAME_END_HAS_WINNER.send(online, winner.displayName());
             }
 
             if (!SurvivalGamesPlugin.LOCAL_TESTING) {
@@ -341,8 +326,8 @@ public class SurvivalGames implements SingleWorldMineplexGame {
             }
         }
 
-        // Set the game to the next GameState to trigger additional game logics
-        this.setGameState(GameState.CLEANING_UP);
+        // Start the next game
+        MineplexModuleManager.getRegisteredModule(MineplexGameModule.class).startNextGame();
     }
 
     /**
@@ -366,67 +351,64 @@ public class SurvivalGames implements SingleWorldMineplexGame {
     }
 
     /**
-     * Sets the current {@link GameState} of the {@link MineplexGame}.
-     *
-     * @param gameState the new state of the game
-     */
-    @Override
-    public void setGameState(@NonNull final GameState gameState) {
-        // The state did not change, nothing to do.
-        if (this.gameState == gameState) {
-            return;
-        }
-
-        // Call pre state event
-        new PreMineplexGameStateChangeEvent(this, this.gameState, gameState).callEvent();
-        // Create post state event
-        final PostMineplexGameStateChangeEvent postEvent =
-                new PostMineplexGameStateChangeEvent(this, this.gameState, gameState);
-        // Change state
-        this.gameState = gameState;
-        // Call post state event
-        postEvent.callEvent();
-    }
-
-    /**
-     * Retrieves the {@link PlayerState} of the specified player in the game.
-     *
-     * @param player the player for whom to retrieve the state
-     * @return the player's current state in the game, or {@link BuiltInPlayerState#SPECTATOR} if the player's state is not found
-     */
-    @Override
-    public @NotNull PlayerState getPlayerState(final @NotNull Player player) {
-        return this.players.getOrDefault(player, BuiltInPlayerState.SPECTATOR);
-    }
-
-    /**
      * Setting up all {@link com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic} for this game.
      */
     @Override
     public void setup() {
         //noinspection unchecked
-        this.stateHelperMechanic = this.mechanicFactory.construct(GameStateListenerHelperMechanic.class);
+        this.stateHelperMechanic = this.gameMechanicFactory.construct(GameStateListenerHelperMechanic.class);
         this.stateHelperMechanic
                 // Function run once when the GameState changes to PRE_START
-                .registerRunnable(this::onPreStart, GameState.PRE_START)
+                .registerRunnable(this::onPreStart, BuiltInGameStateSelector.ready())
                 // Function run once when the GameState changes to STARTED
-                .registerRunnable(this::onStart, GameState.STARTED)
+                .registerSingleRunnable(this::onStart, BuiltInGameStateSelector.inProgress())
                 // Function run once when the GameState changes to ENDED
-                .registerRunnable(this::onEnded, GameState.ENDED)
+                .registerSingleRunnable(this::onEnded, BuiltInGameStateSelector.ended())
                 // Event listener that is listening during all GameStates
-                .registerEventListener(new SurvivalGamesListener(this), GameState.values())
+                .registerEventListener(new SurvivalGamesListener(this), state -> true)
                 // Event listener that is listening during the PRE_START GameState
-                .registerEventListener(new SurvivalGamesPreStartListener(this), GameState.PRE_START)
+                .registerEventListener(new SurvivalGamesPreStartListener(this), BuiltInGameStateSelector.ready())
                 // Event listener that is listening during the STARTED GameState
-                .registerEventListener(new SurvivalGamesStartedListener(this), GameState.STARTED);
+                .registerEventListener(new SurvivalGamesStartedListener(this), BuiltInGameStateSelector.inProgress());
 
-        this.legacyMechanic = this.mechanicFactory.construct(LegacyMechanic.class);
+        this.spectatorMechanic = this.gameMechanicFactory.construct(SpectatorMechanic.class);
+        this.spectatorMechanic
+                .getSettings()
+                .setDeathOut(true)
+                .setDropItemsOnDeath(true)
+                .setDropItemsOnDisconnect(true);
+        this.spectatorMechanic.setStateHandler(new SpectatorStateHandler() {
+            @Override
+            public void onSpectatorAdd(@NonNull final Player player, final boolean teleport, final boolean out) {
+                SurvivalGames.this.setPlayerState(
+                        player, out ? BuiltInPlayerState.ELIMINATED : BuiltInPlayerState.RESPAWNING);
+            }
 
-        this.gameWorldSelectorMechanic = this.mechanicFactory.construct(GameWorldSelectorMechanic.class);
-        this.kitMechanic = this.mechanicFactory.construct(KitMechanic.class);
-        this.abilityMechanic = this.mechanicFactory.construct(AbilityMechanic.class);
-        this.teamMechanic = this.mechanicFactory.construct(TeamMechanic.class);
-        this.damageGlowMechanic = new DamageGlowMechanic(this.plugin);
+            @Override
+            public void onPlayerRespawn(@NonNull final Player player) {
+                SurvivalGames.this.setPlayerState(player, BuiltInPlayerState.ALIVE);
+            }
+        });
+        this.spectatorMechanic.setLocationHandler(new SpectatorLocationHandler() {
+            @Override
+            public Location getSpectatorLocation(@NonNull final Player player) {
+                return new Location(SurvivalGames.this.getGameWorld().getMinecraftWorld(), 0, 100, 0);
+            }
+
+            @Override
+            public boolean shouldTeleport(@NonNull final Player player) {
+                return false;
+            }
+        });
+        this.spectatorMechanic.setup(this);
+
+        this.legacyMechanic = this.gameMechanicFactory.construct(LegacyMechanic.class);
+
+        this.gameWorldSelectorMechanic = this.gameMechanicFactory.construct(GameWorldSelectorMechanic.class);
+        this.kitMechanic = this.gameMechanicFactory.construct(KitMechanic.class);
+        this.abilityMechanic = this.gameMechanicFactory.construct(AbilityMechanic.class);
+        this.teamMechanic = this.gameMechanicFactory.construct(TeamMechanic.class);
+        this.damageGlowMechanic = new DamageGlowMechanic();
         this.healingSoupMechanic = new HealingSoupMechanic();
         this.trackingCompassMechanic = new TrackingCompassMechanic(this.plugin);
         this.lootContainerMechanic = new SurvivalGamesLootMechanic(this.trackingCompassMechanic);
@@ -443,7 +425,7 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         this.borderMechanic.setup(this);
         this.lootContainerMechanic.setup(this);
         this.teamMechanic.setup(this);
-        this.teamMechanic.registerTeam("Players", locale -> Component.text(PLAYERS_TEAM_NAME.getText(locale)));
+        this.teamMechanic.registerTeam("Players", SurvivalGamesMessageComponent.PLAYERS_TEAM_NAME.apply());
 
         this.kitMechanic.registerKit(this, PlayerKit.class, new PlayerKit(this.abilityMechanic, this.kitMechanic));
 
@@ -452,6 +434,9 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         this.legacyMechanic.setup(this);
 
         this.stateHelperMechanic.setup(this);
+
+        // We need to indicate that we are ready after setting up all mechanics.
+        this.setGameState(BuiltInGameState.PRE_START);
     }
 
     /**
@@ -474,45 +459,12 @@ public class SurvivalGames implements SingleWorldMineplexGame {
         this.trackingCompassMechanic.teardown();
         this.borderMechanic.teardown();
         this.legacyMechanic.teardown();
+        this.spectatorMechanic.teardown();
 
         // Cleanup player data
-        for (final Player player : this.players.keySet()) {
+        for (final Player player : this.getPlayerStates().keySet()) {
             this.cleanupPlayer(player);
         }
-
-        this.players.clear();
-        this.alivePlayers.clear();
-    }
-
-    /**
-     * Set the {@link PlayerState} of a {@link Player} in the game to the specified new state.
-     *
-     * @param player    The player whose state is being set.
-     * @param newState  The new state to set for the player.
-     */
-    public void setPlayerState(final Player player, @NonNull final PlayerState newState) {
-        final PlayerState previousState = this.players.put(player, newState);
-
-        if (newState.equals(previousState)) {
-            return;
-        }
-
-        if (newState.isAlive()) {
-            this.alivePlayers.add(player);
-        } else {
-            this.alivePlayers.remove(player);
-        }
-
-        new PlayerStateChangeEvent(player, this, previousState, newState).callEvent();
-    }
-
-    /**
-     * Remove a {@link Player} from the game.
-     *
-     * @param player The player to be removed from the game.
-     */
-    public void removePlayer(final Player player) {
-        this.players.remove(player);
     }
 
     /**
@@ -540,8 +492,8 @@ public class SurvivalGames implements SingleWorldMineplexGame {
      * <p>
      * This method sets the player's state to ALIVE and checks if the game start condition should be checked.
      *
-     * @param player               The player to be added to the game.
-     * @param checkStartCondition  Whether to check the game start condition or not.
+     * @param player              The player to be added to the game.
+     * @param checkStartCondition Whether to check the game start condition or not.
      */
     public void addPlayer(final Player player, final boolean checkStartCondition) {
         this.setPlayerState(player, BuiltInPlayerState.ALIVE);
@@ -562,25 +514,27 @@ public class SurvivalGames implements SingleWorldMineplexGame {
 
     /**
      * This method checks if the number of alive {@link Player} in the game is equal to or greater than the minimum number of players
-     * required to start the game. If the condition is met, it sets the game state to {@link GameState#STARTED}.
+     * required to start the game. If the condition is met, it sets the game state to {@link BuiltInGameState#STARTED}.
      */
     // TODO: The startup logic should not be here and more inside the lobby. Players should also only be added on
     // startup of the game.
     public void checkGameStartCondition() {
-        log.debug("Game start check. Count: {} Required: {}", this.alivePlayers, this.minPlayers);
-        if (this.alivePlayers.size() >= this.minPlayers) {
-            this.setGameState(GameState.STARTED);
+        final List<Player> alivePlayers = this.getAlivePlayers();
+        log.debug("Game start check. Count: {} Required: {}", alivePlayers, this.minPlayers);
+        if (alivePlayers.size() >= this.minPlayers) {
+            this.setGameState(BuiltInGameState.STARTED);
         }
     }
 
     /**
      * This method checks if the number of alive {@link Player} in the game is less than or equal to 1.
-     * If the condition is met, it sets the game state to {@link GameState#ENDED}.
+     * If the condition is met, it sets the game state to {@link BuiltInGameState#ENDED}.
      */
     public void checkGameEndCondition() {
-        log.debug("Game end check. Count: {}", this.alivePlayers);
-        if (this.alivePlayers.size() <= 1) {
-            this.setGameState(GameState.ENDED);
+        final List<Player> alivePlayers = this.getAlivePlayers();
+        log.debug("Game end check. Count: {}", alivePlayers);
+        if (alivePlayers.size() <= 1) {
+            this.setGameState(BuiltInGameState.ENDED);
         }
     }
 }

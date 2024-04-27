@@ -22,6 +22,7 @@ public class SurvivalGamesListener implements Listener {
     /**
      * Event handler for the {@link PlayerQuitEvent} event.
      * Adds the joined {@link org.bukkit.entity.Player} to the game and checks if the game can be started.
+     *
      * @param event The {@link PlayerQuitEvent} event
      */
     @EventHandler
@@ -36,6 +37,6 @@ public class SurvivalGamesListener implements Listener {
             this.game.setPlayerState(player, BuiltInPlayerState.ELIMINATED);
         }
 
-        this.game.removePlayer(event.getPlayer());
+        this.game.removePlayerState(event.getPlayer());
     }
 }

@@ -73,6 +73,7 @@ public class SurvivalGamesLootMechanic implements GameMechanic<SurvivalGames> {
 
     /**
      * Method to be called when this mechanic is set up for a {@link MineplexGame}
+     *
      * @param game The {@link MineplexGame} setting up this mechanic
      */
     @Override
@@ -90,7 +91,7 @@ public class SurvivalGamesLootMechanic implements GameMechanic<SurvivalGames> {
         }
 
         // Setup LootContainerMechanic
-        this.lootMechanic = game.getMechanicFactory().construct(LootContainerMechanic.class);
+        this.lootMechanic = game.getGameMechanicFactory().construct(LootContainerMechanic.class);
         this.lootMechanic.register(tierOneType);
         this.lootMechanic.register(tierTwoType);
         this.lootMechanic.setup(game);
@@ -107,8 +108,8 @@ public class SurvivalGamesLootMechanic implements GameMechanic<SurvivalGames> {
     /**
      * Reads the loot type from a file and associates it with locations in the specified {@link MineplexWorld}.
      *
-     * @param world The MineplexWorld object representing the world in which the loot type should be associated.
-     * @param file The file from which the loot type should be read.
+     * @param world                The MineplexWorld object representing the world in which the loot type should be associated.
+     * @param file                 The file from which the loot type should be read.
      * @param locationDataPointKey The key to identify the locations in the world associated with the loot type.
      * @return The LootContainerType object read from the file with locations associated.
      * @throws IOException If an I/O error occurs while reading the loot type from the file.

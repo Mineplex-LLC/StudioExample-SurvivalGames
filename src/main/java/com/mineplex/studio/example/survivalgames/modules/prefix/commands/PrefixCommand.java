@@ -1,11 +1,7 @@
 package com.mineplex.studio.example.survivalgames.modules.prefix.commands;
 
-import com.mineplex.studio.example.survivalgames.SurvivalGamesI18nText;
 import com.mineplex.studio.example.survivalgames.modules.prefix.ChatPrefixModule;
-import com.mineplex.studio.sdk.i18n.I18nText;
 import java.util.List;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -23,20 +19,6 @@ public class PrefixCommand extends Command {
      * The syntax of the command.
      */
     private static final String COMMAND_SYNTAX = "<prefix> or empty to reset";
-
-    // Messages
-    /**
-     * The {@link I18nText} for a successful removed prefix.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText PREFIX_REMOVE =
-            new SurvivalGamesI18nText("COMMAND_PREFIX_REMOVE", "<red>Removed prefix!</red>");
-    /**
-     * The {@link I18nText} for a successful set prefix.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText PREFIX_SET =
-            new SurvivalGamesI18nText("COMMAND_PREFIX_SET", "<green>Set new prefix!</green>");
 
     // Modules
     /**
@@ -63,16 +45,14 @@ public class PrefixCommand extends Command {
         // Reset the prefix
         if (args.length == 0) {
             this.module.removePrefix(player);
-            final Component message = MiniMessage.miniMessage().deserialize(PREFIX_REMOVE.getText(player.locale()));
-            player.sendMessage(message);
+            PrefixCommandMessageComponent.PREFIX_REMOVE.send(player);
             return true;
         }
 
         // Set new prefix
         final String prefix = String.join(" ", args);
         this.module.updatePrefix(player, prefix);
-        final Component message = MiniMessage.miniMessage().deserialize(PREFIX_SET.getText(player.locale()));
-        player.sendMessage(message);
+        PrefixCommandMessageComponent.PREFIX_SET.send(player);
         return true;
     }
 }

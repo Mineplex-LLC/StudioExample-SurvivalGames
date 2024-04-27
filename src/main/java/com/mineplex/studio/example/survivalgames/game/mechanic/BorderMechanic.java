@@ -7,6 +7,7 @@ import com.mineplex.studio.sdk.modules.game.event.PlayerStateChangeEvent;
 import com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic;
 import com.mineplex.studio.sdk.modules.game.mechanics.helper.GameStateListenerHelperMechanic;
 import com.mineplex.studio.sdk.modules.world.MineplexWorld;
+import com.mineplex.studio.sdk.util.selector.BuiltInGameStateSelector;
 import java.util.List;
 import lombok.Getter;
 import lombok.NonNull;
@@ -96,6 +97,7 @@ public class BorderMechanic implements GameMechanic<SingleWorldMineplexGame> {
 
     /**
      * Method to be called when this mechanic is set up for a {@link MineplexGame}
+     *
      * @param game The {@link MineplexGame} setting up this mechanic
      */
     @Override
@@ -110,9 +112,9 @@ public class BorderMechanic implements GameMechanic<SingleWorldMineplexGame> {
 
         this.stateHelperMechanic
                 // Function run once when the GameState changes to STARTED
-                .registerRunnable(this::setupBorder, GameState.STARTED)
+                .registerRunnable(this::setupBorder, BuiltInGameStateSelector.inProgress())
                 // Event listener that is listening during the STARTED GameState
-                .registerEventListener(this, GameState.STARTED);
+                .registerEventListener(this, BuiltInGameStateSelector.inProgress());
 
         this.stateHelperMechanic.setup(game);
     }

@@ -1,13 +1,9 @@
 package com.mineplex.studio.example.survivalgames.modules.worlddemo.commands;
 
-import com.mineplex.studio.example.survivalgames.SurvivalGamesI18nText;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModule;
-import com.mineplex.studio.sdk.i18n.I18nText;
 import java.util.List;
 import java.util.Locale;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,39 +22,6 @@ public class DemoWorldCommand extends Command {
      */
     private static final String COMMAND_SYNTAX = "<load|unload|delete> <worldID>";
 
-    // Messages
-    /**
-     * The {@link I18nText} for the invalid command syntax.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText MISSING_ARGUMENTS = new SurvivalGamesI18nText(
-            "COMMAND_DEMO_WORLD_INVALID_SYNTAX", "<gray>Missing required arguments: <blue><arguments></blue></gray>");
-
-    /**
-     * The {@link I18nText} for a invalid {@link com.mineplex.studio.sdk.modules.world.MineplexWorld} id.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText WORLD_INVALID_ID = new SurvivalGamesI18nText(
-            "COMMAND_DEMO_WORLD_INVALID_ID", "<red>The provided ID <yellow><world></yellow> was not found!</red>");
-    /**
-     * The {@link I18nText} for a successfully loaded {@link com.mineplex.studio.sdk.modules.world.MineplexWorld}.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText WORLD_LOAD = new SurvivalGamesI18nText(
-            "COMMAND_DEMO_WORLD_LOAD", "<green>Loaded world <yellow><world></yellow>.</green>");
-    /**
-     * The {@link I18nText} for a successfully unloaded {@link com.mineplex.studio.sdk.modules.world.MineplexWorld}.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText WORLD_UNLOAD = new SurvivalGamesI18nText(
-            "COMMAND_DEMO_WORLD_UNLOAD", "<green>Unloaded world <yellow><world></yellow>.</green>");
-    /**
-     * The {@link I18nText} for a successfully deleted {@link com.mineplex.studio.sdk.modules.world.MineplexWorld}.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText WORLD_DELETE = new SurvivalGamesI18nText(
-            "COMMAND_DEMO_WORLD_DELETE", "<red>Deleted world <yellow><world></yellow>!</red>");
-
     // Modules
     private final WorldDemoModule worldDemoModule;
 
@@ -69,38 +32,28 @@ public class DemoWorldCommand extends Command {
     }
 
     public boolean onLoad(final Player player, final String worldID) {
-        this.worldDemoModule.loadDemoWorld(worldID).thenAccept(world -> {
-            final Component message = MiniMessage.miniMessage()
-                    .deserialize(
-                            WORLD_LOAD.getText(player.locale()),
-                            Placeholder.parsed(
-                                    "world", world.getMinecraftWorld().getName()));
-            player.sendMessage(message);
-        });
+        this.worldDemoModule
+                .loadDemoWorld(worldID)
+                .thenAccept(world -> DemoWorldCommandMessageComponent.WORLD_LOAD.send(
+                        player, Component.text(world.getMinecraftWorld().getName())));
         return true;
     }
 
     public boolean onUnload(final Player player, final String worldID) {
-        final Component message;
         if (this.worldDemoModule.unloadDemoWorld(worldID)) {
-            message = MiniMessage.miniMessage()
-                    .deserialize(WORLD_UNLOAD.getText(player.locale()), Placeholder.parsed("world", worldID));
+            DemoWorldCommandMessageComponent.WORLD_UNLOAD.send(player, Component.text(worldID));
         } else {
-            message = MiniMessage.miniMessage()
-                    .deserialize(WORLD_INVALID_ID.getText(player.locale()), Placeholder.parsed("world", worldID));
+            DemoWorldCommandMessageComponent.INVALID_ID.send(player, Component.text(worldID));
         }
 
-        player.sendMessage(message);
         return true;
     }
 
     public boolean onDelete(final Player player, final String worldID) {
         this.worldDemoModule.unloadDemoWorld(worldID);
-        this.worldDemoModule.deleteDemoWorld(worldID).thenAccept(v -> {
-            final Component message = MiniMessage.miniMessage()
-                    .deserialize(WORLD_DELETE.getText(player.locale()), Placeholder.parsed("world", worldID));
-            player.sendMessage(message);
-        });
+        this.worldDemoModule
+                .deleteDemoWorld(worldID)
+                .thenAccept(v -> DemoWorldCommandMessageComponent.WORLD_DELETE.send(player, Component.text(worldID)));
 
         return true;
     }
@@ -113,10 +66,7 @@ public class DemoWorldCommand extends Command {
         }
 
         if (strings.length < 2) {
-            player.sendMessage(MiniMessage.miniMessage()
-                    .deserialize(
-                            MISSING_ARGUMENTS.getText(player.locale()),
-                            Placeholder.parsed("arguments", MISSING_ARGUMENTS.getText(player.locale()))));
+            DemoWorldCommandMessageComponent.MISSING_ARGUMENTS.send(player, Component.text(COMMAND_SYNTAX));
             return false;
         }
 

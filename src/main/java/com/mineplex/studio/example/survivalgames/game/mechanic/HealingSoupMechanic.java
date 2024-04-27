@@ -5,6 +5,7 @@ import com.mineplex.studio.sdk.modules.game.MineplexGame;
 import com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic;
 import com.mineplex.studio.sdk.modules.game.mechanics.helper.GameStateListenerHelperMechanic;
 import com.mineplex.studio.sdk.util.MinecraftTimeUnit;
+import com.mineplex.studio.sdk.util.selector.BuiltInGameStateSelector;
 import lombok.NonNull;
 import org.bukkit.Effect;
 import org.bukkit.Location;
@@ -33,6 +34,7 @@ public class HealingSoupMechanic implements GameMechanic<MineplexGame> {
 
     /**
      * Method to be called when this mechanic is set up for a {@link MineplexGame}
+     *
      * @param game The {@link MineplexGame} setting up this mechanic
      */
     @Override
@@ -43,7 +45,7 @@ public class HealingSoupMechanic implements GameMechanic<MineplexGame> {
         this.stateHelperMechanic = game.getGameMechanicFactory().construct(GameStateListenerHelperMechanic.class);
 
         // Event listener that is listening during the STARTED GameState
-        this.stateHelperMechanic.registerEventListener(this, GameState.STARTED);
+        this.stateHelperMechanic.registerEventListener(this, BuiltInGameStateSelector.inProgress());
         this.stateHelperMechanic.setup(game);
     }
 

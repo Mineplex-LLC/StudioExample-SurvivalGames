@@ -1,13 +1,10 @@
 package com.mineplex.studio.example.survivalgames.game.mechanic;
 
-import com.mineplex.studio.example.survivalgames.SurvivalGamesI18nText;
-import com.mineplex.studio.sdk.i18n.I18nText;
 import com.mineplex.studio.sdk.modules.game.MineplexGame;
 import com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic;
 import com.mineplex.studio.sdk.util.MinecraftTimeUnit;
 import it.unimi.dsi.fastutil.doubles.DoubleObjectPair;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import lombok.Getter;
@@ -15,8 +12,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,71 +33,6 @@ public class TrackingCompassMechanic implements GameMechanic<MineplexGame> {
      * Represents the key used for storing and retrieving information about usages of the tracking compass {@link ItemStack}.
      */
     private static final NamespacedKey USAGE_KEY = new NamespacedKey("tracking_compass_mechanic", "usages");
-
-    // Messages
-    /**
-     * The {@link I18nText} for the {@link ItemStack} name.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText ITEM_NAME =
-            new SurvivalGamesI18nText("COMPASS_ITEM_NAME", "<!i><b><yellow>Tracking Compass</yellow></b></!i>");
-    /**
-     * The {@link I18nText} for the {@link ItemStack} lore line 0.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText ITEM_DESCRIPTION_0 = new SurvivalGamesI18nText(
-            "COMPASS_ITEM_DESCRIPTION_0", "<!i><yellow>Uses</yellow> <green><uses></green></!i>");
-    /**
-     * The {@link I18nText} for the {@link ItemStack} lore line 1.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText ITEM_DESCRIPTION_1 = new SurvivalGamesI18nText(
-            "COMPASS_ITEM_DESCRIPTION_1", "<!i><yellow>Use this to find the location and</yellow></!i>");
-    /**
-     * The {@link I18nText} for the {@link ItemStack} lore line 2.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText ITEM_DESCRIPTION_2 = new SurvivalGamesI18nText(
-            "COMPASS_ITEM_DESCRIPTION_2", "<!i><yellow>distance of the nearest player!</yellow></!i>");
-    /**
-     * The {@link I18nText} for the {@link ItemStack} lore line 3.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText ITEM_DESCRIPTION_3 = new SurvivalGamesI18nText(
-            "COMPASS_ITEM_DESCRIPTION_3", "<!i><yellow>Click on another compass in your inventory to</yellow></!i>");
-    /**
-     * The {@link I18nText} for the {@link ItemStack} lore line 4.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText ITEM_DESCRIPTION_4 =
-            new SurvivalGamesI18nText("COMPASS_ITEM_DESCRIPTION_4", "<!i><yellow>combine them!</yellow></!i>");
-    /**
-     * The {@link I18nText} if there is no near player on item usage.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText NO_PLAYERS_FOUND =
-            new SurvivalGamesI18nText("COMPASS_NO_PLAYERS_FOUND", "<yellow>No players were found nearby.</yellow>");
-    /**
-     * The {@link I18nText} if there is a near player on item usage.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText PLAYERS_FOUND = new SurvivalGamesI18nText(
-            "COMPASS_PLAYER_FOUND",
-            "<gray><yellow><player></yellow> is <yellow><distance></yellow> blocks away. Your compass has <yellow><uses-count> <uses-word></yellow> left.</gray>");
-    /**
-     * The {@link I18nText} if the item combine was successful.
-     * This message follows the {@link MiniMessage} format.
-     */
-    private static final I18nText ITEM_COMBINE =
-            new SurvivalGamesI18nText("COMPASS_PLAYER_FOUND", "<gray>You combined two compasses.</gray>");
-    /**
-     * The {@link I18nText} for the singular use form.
-     */
-    private static final I18nText USES_SINGULAR = new SurvivalGamesI18nText("USES_SINGULAR", "use");
-    /**
-     * The {@link I18nText} for the plural use form.
-     */
-    private static final I18nText USES_PLURAL = new SurvivalGamesI18nText("USES_PLURAL", "uses");
 
     /**
      * The {@link JavaPlugin} the {@link GameMechanic} is created from.
@@ -139,6 +69,7 @@ public class TrackingCompassMechanic implements GameMechanic<MineplexGame> {
 
     /**
      * Method to be called when this mechanic is set up for a {@link MineplexGame}
+     *
      * @param game The {@link MineplexGame} setting up this mechanic
      */
     @Override
@@ -199,19 +130,8 @@ public class TrackingCompassMechanic implements GameMechanic<MineplexGame> {
 
                             player.setCompassTarget(target.right().getLocation());
                             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1, 1);
-                            player.sendMessage(MiniMessage.miniMessage()
-                                    .deserialize(
-                                            PLAYERS_FOUND.getText(player.locale()),
-                                            Placeholder.parsed(
-                                                    "player", target.right().getName()),
-                                            Placeholder.parsed("distance", String.valueOf((int) target.firstDouble())),
-                                            Placeholder.parsed("uses-count", String.valueOf(newUses)),
-                                            Placeholder.parsed(
-                                                    "uses-word",
-                                                    (newUses > 1
-                                                            ? USES_PLURAL.getText(player.locale())
-                                                            : USES_SINGULAR.getText(player.locale())))));
-
+                            TrackingCompassMessageComponent.FOUND_TARGET.send(
+                                    player, target.right().displayName(), (int) target.firstDouble(), newUses);
                             final ItemStack newItem;
                             if (newUses <= 0) {
                                 newItem = null;
@@ -221,7 +141,7 @@ public class TrackingCompassMechanic implements GameMechanic<MineplexGame> {
 
                             player.getInventory().setItem(hand, newItem);
                         },
-                        () -> player.sendMessage(NO_PLAYERS_FOUND.getText(player.locale())));
+                        () -> TrackingCompassMessageComponent.NO_TARGET.send(player));
     }
 
     /**
@@ -257,7 +177,7 @@ public class TrackingCompassMechanic implements GameMechanic<MineplexGame> {
         event.setCursor(newItemStack);
         event.setCurrentItem(null);
 
-        player.sendMessage(MiniMessage.miniMessage().deserialize(ITEM_COMBINE.getText(player.locale())));
+        TrackingCompassMessageComponent.COMBINE.send(player);
         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 1);
     }
 
@@ -347,23 +267,17 @@ public class TrackingCompassMechanic implements GameMechanic<MineplexGame> {
      * @return the created tracking compass item.
      */
     public ItemStack createTrackingCompass(final int uses) {
-        // TODO: Support player specific item messages
-        final Locale locale = Locale.US;
-
         final ItemStack itemStack = new ItemStack(this.itemMaterial);
         itemStack.editMeta(itemMeta -> {
-            itemMeta.displayName(MiniMessage.miniMessage().deserialize(ITEM_NAME.getText(locale)));
+            itemMeta.displayName(TrackingCompassMessageComponent.ITEM_NAME.apply());
 
             itemMeta.lore(List.of(
-                    MiniMessage.miniMessage()
-                            .deserialize(
-                                    ITEM_DESCRIPTION_0.getText(locale),
-                                    Placeholder.parsed("uses", String.valueOf(uses))),
+                    TrackingCompassMessageComponent.ITEM_LORE_0.apply(uses),
                     Component.empty(),
-                    MiniMessage.miniMessage().deserialize(ITEM_DESCRIPTION_1.getText(locale)),
-                    MiniMessage.miniMessage().deserialize(ITEM_DESCRIPTION_2.getText(locale)),
-                    MiniMessage.miniMessage().deserialize(ITEM_DESCRIPTION_3.getText(locale)),
-                    MiniMessage.miniMessage().deserialize(ITEM_DESCRIPTION_4.getText(locale))));
+                    TrackingCompassMessageComponent.ITEM_LORE_1.apply(),
+                    TrackingCompassMessageComponent.ITEM_LORE_2.apply(),
+                    TrackingCompassMessageComponent.ITEM_LORE_3.apply(),
+                    TrackingCompassMessageComponent.ITEM_LORE_4.apply()));
 
             itemMeta.getPersistentDataContainer().set(USAGE_KEY, PersistentDataType.INTEGER, uses);
         });

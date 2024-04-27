@@ -4,16 +4,15 @@ import com.mineplex.studio.sdk.modules.game.GameState;
 import com.mineplex.studio.sdk.modules.game.MineplexGame;
 import com.mineplex.studio.sdk.modules.game.PlayerState;
 import com.mineplex.studio.sdk.modules.game.mechanics.GameMechanic;
+import com.mineplex.studio.sdk.modules.game.mechanics.helper.GameStateListenerHelperMechanic;
 import com.mineplex.studio.sdk.util.MinecraftTimeUnit;
+import com.mineplex.studio.sdk.util.selector.BuiltInGameStateSelector;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -29,23 +28,29 @@ public class DamageGlowMechanic implements GameMechanic<MineplexGame> {
     private static final int GLOW_DURATION_IN_TICKS = (int) MinecraftTimeUnit.SECONDS.toTicks(5);
 
     /**
-     * The {@link JavaPlugin} the {@link DamageGlowMechanic} is created from.
-     */
-    private final JavaPlugin plugin;
-    /**
      * The {@link MineplexGame} the {@link DamageGlowMechanic} is created from.
      */
     private MineplexGame game;
+    /**
+     * The {@link GameStateListenerHelperMechanic} is a helper class to register {@link GameState} based {@link org.bukkit.event.Listener} and {@link org.bukkit.scheduler.BukkitTask}.
+     */
+    private GameStateListenerHelperMechanic<MineplexGame> stateHelperMechanic;
 
     /**
      * Method to be called when this mechanic is set up for a {@link MineplexGame}
+     *
      * @param game The {@link MineplexGame} setting up this mechanic
      */
     @Override
     public void setup(@NonNull final MineplexGame game) {
         this.game = game;
 
-        Bukkit.getPluginManager().registerEvents(this, this.plugin);
+        //noinspection unchecked
+        this.stateHelperMechanic = game.getGameMechanicFactory().construct(GameStateListenerHelperMechanic.class);
+
+        // Event listener that is listening during the STARTED GameState
+        this.stateHelperMechanic.registerEventListener(this, BuiltInGameStateSelector.inProgress());
+        this.stateHelperMechanic.setup(game);
     }
 
     /**
@@ -53,7 +58,7 @@ public class DamageGlowMechanic implements GameMechanic<MineplexGame> {
      */
     @Override
     public void teardown() {
-        HandlerList.unregisterAll(this);
+        this.stateHelperMechanic.teardown();
     }
 
     /**
@@ -64,10 +69,6 @@ public class DamageGlowMechanic implements GameMechanic<MineplexGame> {
      */
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDamage(final EntityDamageEvent event) {
-        if (this.game.getGameState() != GameState.STARTED) {
-            return;
-        }
-
         if (!(event.getEntity() instanceof final Player player)) {
             return;
         }

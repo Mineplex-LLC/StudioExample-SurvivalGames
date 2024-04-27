@@ -9,12 +9,16 @@ import com.mineplex.studio.sdk.modules.MineplexModuleManager;
 import com.mineplex.studio.sdk.modules.game.GameCycle;
 import com.mineplex.studio.sdk.modules.game.MineplexGame;
 import com.mineplex.studio.sdk.modules.game.MineplexGameModule;
+import com.mineplex.studio.sdk.modules.i18n.I18NModule;
 import com.mineplex.studio.sdk.modules.lobby.LobbyModule;
 import com.mineplex.studio.sdk.modules.world.MineplexWorld;
 import com.mineplex.studio.sdk.modules.world.MineplexWorldModule;
 import com.mineplex.studio.sdk.modules.world.config.MineplexWorldConfig;
 import com.mineplex.studio.sdk.modules.world.config.WorldCreationConfig;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import lombok.extern.slf4j.Slf4j;
+import net.kyori.adventure.util.UTF8ResourceBundleControl;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -45,6 +49,14 @@ public class SurvivalGamesPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         log.info("Starting plugin!");
+
+        // Load translations
+        final I18NModule i18NModule = MineplexModuleManager.getRegisteredModule(I18NModule.class);
+        final String baseName = "i18n.SurvivalGames";
+        for (final Locale locale : i18NModule.getAvailableLocales()) {
+            final ResourceBundle bundle = ResourceBundle.getBundle(baseName, locale, UTF8ResourceBundleControl.get());
+            i18NModule.addTranslation(locale, bundle, true);
+        }
 
         // Setup modules
         final MineplexModuleManager moduleManager = MineplexModuleManager.getInstance();
@@ -86,8 +98,7 @@ public class SurvivalGamesPlugin extends JavaPlugin {
         });
 
         // Trigger the next game
-        this.gameModule.setCurrentGame(
-                this.gameModule.getGameCycle().orElseThrow().createNextGame());
+        this.gameModule.startNextGame();
     }
 
     /**

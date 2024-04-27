@@ -2,7 +2,7 @@
 ## Mineplex
 ##############################
 studio-cli-win.exe
-mineplex/
+/mineplex/*
 spark/
 
 ##############################

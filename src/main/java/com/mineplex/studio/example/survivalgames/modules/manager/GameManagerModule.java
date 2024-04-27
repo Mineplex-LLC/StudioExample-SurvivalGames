@@ -57,14 +57,12 @@ public class GameManagerModule implements MineplexModule {
      * Stops the currently running game.
      * <p>
      * This method is used to stop the currently running game, if there is one.
-     * If the game's state is {@link GameState#STARTED}, it will change the state
-     * to {@link GameState#ENDED}.
+     * If the game's state is {@link GameState#isInProgress}, it will forcefully start the next game.
      */
     public void stopGame() {
-        this.gameModule.getCurrentGame().ifPresent(game -> {
-            if (game.getGameState() == GameState.STARTED) {
-                game.setGameState(GameState.ENDED);
-            }
-        });
+        this.gameModule
+                .getCurrentGame()
+                .filter(game -> game.getGameState().isInProgress())
+                .ifPresent(game -> this.gameModule.startNextGame());
     }
 }
