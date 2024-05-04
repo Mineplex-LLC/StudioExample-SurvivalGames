@@ -1,3 +1,0 @@
-databaseName: main-mongo-database
-namespaceId: studio-examples
-type: MONGO # can be one of MYSQL, POSTGRES, or MONGO
