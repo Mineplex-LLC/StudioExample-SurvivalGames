@@ -56,7 +56,7 @@ public class GameGUI implements MineplexGUI {
      */
     @Override
     public Window createJavaInventoryMenu(@NonNull final Player player) {
-        final ItemStack display = new ItemStack(Material.REDSTONE_BLOCK);
+        final ItemStack display = ItemStack.of(Material.REDSTONE_BLOCK);
         display.editMeta(displayItemMeta -> displayItemMeta.displayName(GameGUIMessageComponent.GUI_CONTENT.apply()));
 
         final Gui gui = Gui.normal()

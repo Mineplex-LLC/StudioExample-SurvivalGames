@@ -1,10 +1,10 @@
 package com.mineplex.studio.example.survivalgames.modules.worlddemo;
 
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.commands.DemoWorldCommand;
-import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.modules.MineplexModule;
 import com.mineplex.studio.sdk.modules.MineplexModuleImplementation;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
+import com.mineplex.studio.sdk.modules.command.CommandModule;
 import com.mineplex.studio.sdk.modules.world.MineplexWorld;
 import com.mineplex.studio.sdk.modules.world.MineplexWorldModule;
 import com.mineplex.studio.sdk.modules.world.config.MineplexWorldConfig;
@@ -22,14 +22,20 @@ import org.bukkit.command.Command;
 @MineplexModuleImplementation(WorldDemoModule.class)
 public class WorldDemoModule implements MineplexModule {
     /**
+     * The {@link MineplexWorldModule} manges the creation and loading of temporary and persistence {@link MineplexWorld}.
+     */
+    private MineplexWorldModule worldModule;
+
+    /**
+     * The {@link CommandModule} is responsible for registering and unregistering commands dynamically.
+     */
+    private CommandModule commandModule;
+
+    /**
      * Command to control {@link WorldDemoModule}.
      */
     private Command command;
 
-    /**
-     * The {@link MineplexWorldModule} manges the creation and loading of temporary and persistence {@link MineplexWorld}.
-     */
-    private MineplexWorldModule worldModule;
     /**
      * The name of the bucket for storing demo worlds.
      * The default bucket name is "DemoWorlds".
@@ -37,19 +43,16 @@ public class WorldDemoModule implements MineplexModule {
     private String bucketName = "DemoWorlds";
 
     /**
-     * Initializes a new instance of the WorldDemoModule class, with the given JavaPlugin instance.
-     */
-    public WorldDemoModule() {
-        this.command = new DemoWorldCommand(this);
-    }
-
-    /**
      * Method called to allocate any additional resources this module uses
      */
     @Override
     public void setup() {
         this.worldModule = MineplexModuleManager.getRegisteredModule(MineplexWorldModule.class);
-        CommandUtil.register(this.command);
+        this.commandModule = MineplexModuleManager.getRegisteredModule(CommandModule.class);
+
+        // Setup command
+        this.command = new DemoWorldCommand(this);
+        this.commandModule.register("sg", this.command);
     }
 
     /**
@@ -57,8 +60,11 @@ public class WorldDemoModule implements MineplexModule {
      */
     @Override
     public void teardown() {
-        CommandUtil.unRegister(this.command);
+        this.commandModule.unregister(this.command);
         this.command = null;
+        this.commandModule = null;
+
+        this.worldModule = null;
     }
 
     /**

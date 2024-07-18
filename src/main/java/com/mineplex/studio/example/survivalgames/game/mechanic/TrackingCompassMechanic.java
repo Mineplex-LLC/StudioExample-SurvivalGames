@@ -267,7 +267,7 @@ public class TrackingCompassMechanic implements GameMechanic<MineplexGame> {
      * @return the created tracking compass item.
      */
     public ItemStack createTrackingCompass(final int uses) {
-        final ItemStack itemStack = new ItemStack(this.itemMaterial);
+        final ItemStack itemStack = ItemStack.of(this.itemMaterial);
         itemStack.editMeta(itemMeta -> {
             itemMeta.displayName(TrackingCompassMessageComponent.ITEM_NAME.apply());
 

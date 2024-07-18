@@ -4,10 +4,10 @@ import com.google.common.util.concurrent.Striped;
 import com.mineplex.studio.example.survivalgames.modules.prefix.commands.PrefixCommand;
 import com.mineplex.studio.example.survivalgames.modules.prefix.data.UserPrefix;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModule;
-import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.modules.MineplexModule;
 import com.mineplex.studio.sdk.modules.MineplexModuleImplementation;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
+import com.mineplex.studio.sdk.modules.command.CommandModule;
 import com.mineplex.studio.sdk.modules.data.DataStorageModule;
 import java.util.Map;
 import java.util.Optional;
@@ -53,6 +53,11 @@ public class ChatPrefixModule implements MineplexModule {
     private DataStorageModule dataStorageModule;
 
     /**
+     * The {@link CommandModule} is responsible for registering and unregistering commands dynamically.
+     */
+    private CommandModule commandModule;
+
+    /**
      * Command to control {@link WorldDemoModule}.
      */
     private Command command;
@@ -67,8 +72,9 @@ public class ChatPrefixModule implements MineplexModule {
     @Override
     public void setup() {
         // Setup command
+        this.commandModule = MineplexModuleManager.getRegisteredModule(CommandModule.class);
         this.command = new PrefixCommand(this);
-        CommandUtil.register(this.command);
+        this.commandModule.register("sg", this.command);
 
         // Setup listener
         this.dataStorageModule = MineplexModuleManager.getRegisteredModule(DataStorageModule.class);
@@ -82,8 +88,9 @@ public class ChatPrefixModule implements MineplexModule {
     @Override
     public void teardown() {
         // Teardown command
-        CommandUtil.unRegister(this.command);
+        this.commandModule.unregister(this.command);
         this.command = null;
+        this.commandModule = null;
 
         // Teardown listener
         HandlerList.unregisterAll(this.listener);

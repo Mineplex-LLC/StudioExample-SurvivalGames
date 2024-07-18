@@ -81,11 +81,11 @@ public class PlayerKit implements Kit<MineplexGame> {
         // Apply gear
         final EntityEquipment equipment = livingEntity.getEquipment();
         if (equipment != null) {
-            equipment.setHelmet(new ItemStack(Material.LEATHER_HELMET));
-            equipment.setChestplate(new ItemStack(Material.LEATHER_CHESTPLATE));
-            equipment.setLeggings(new ItemStack(Material.LEATHER_LEGGINGS));
-            equipment.setBoots(new ItemStack(Material.LEATHER_BOOTS));
-            equipment.setItemInMainHand(new ItemStack(Material.STONE_SWORD));
+            equipment.setHelmet(ItemStack.of(Material.LEATHER_HELMET));
+            equipment.setChestplate(ItemStack.of(Material.LEATHER_CHESTPLATE));
+            equipment.setLeggings(ItemStack.of(Material.LEATHER_LEGGINGS));
+            equipment.setBoots(ItemStack.of(Material.LEATHER_BOOTS));
+            equipment.setItemInMainHand(ItemStack.of(Material.STONE_SWORD));
         }
     }
 

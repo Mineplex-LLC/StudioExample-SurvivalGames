@@ -3,11 +3,11 @@ package com.mineplex.studio.example.survivalgames.modules.manager;
 import com.mineplex.studio.example.survivalgames.modules.manager.commands.GameCommand;
 import com.mineplex.studio.example.survivalgames.modules.manager.ui.GameGUI;
 import com.mineplex.studio.example.survivalgames.modules.worlddemo.WorldDemoModule;
-import com.mineplex.studio.example.survivalgames.util.CommandUtil;
 import com.mineplex.studio.sdk.gui.MineplexGUI;
 import com.mineplex.studio.sdk.modules.MineplexModule;
 import com.mineplex.studio.sdk.modules.MineplexModuleImplementation;
 import com.mineplex.studio.sdk.modules.MineplexModuleManager;
+import com.mineplex.studio.sdk.modules.command.CommandModule;
 import com.mineplex.studio.sdk.modules.game.GameCycle;
 import com.mineplex.studio.sdk.modules.game.GameState;
 import com.mineplex.studio.sdk.modules.game.MineplexGame;
@@ -28,6 +28,11 @@ public class GameManagerModule implements MineplexModule {
     private MineplexGameModule gameModule;
 
     /**
+     * The {@link CommandModule} is responsible for registering and unregistering commands dynamically.
+     */
+    private CommandModule commandModule;
+
+    /**
      * Command to control {@link WorldDemoModule}.
      */
     private Command command;
@@ -38,10 +43,11 @@ public class GameManagerModule implements MineplexModule {
     @Override
     public void setup() {
         this.gameModule = MineplexModuleManager.getRegisteredModule(MineplexGameModule.class);
+        this.commandModule = MineplexModuleManager.getRegisteredModule(CommandModule.class);
 
         // Setup command
         this.command = new GameCommand(new GameGUI(this));
-        CommandUtil.register(this.command);
+        this.commandModule.register("sg", this.command);
     }
 
     /**
@@ -49,8 +55,11 @@ public class GameManagerModule implements MineplexModule {
      */
     @Override
     public void teardown() {
-        CommandUtil.unRegister(this.command);
+        this.commandModule.unregister(this.command);
         this.command = null;
+        this.commandModule = null;
+
+        this.gameModule = null;
     }
 
     /**
