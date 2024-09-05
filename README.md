@@ -14,7 +14,6 @@
 This project is a basic Survival Games implementation for the Mineplex Studio platform with the purpose
 of showcasing the capabilities of the Mineplex Studio environment.
 
-Access to the close alpha is required to use the Mineplex SDK and Studio Client.
 This project is not intended to be used as a standalone game,
 but rather as a reference for developers to understand how to use the Mineplex SDK and Studio Client to
 create games for the Mineplex Studio platform.
@@ -41,8 +40,8 @@ create games for the Mineplex Studio platform.
 ## Requirements
 
 - Java 21+
-- Mineplex SDK (Not available during closed alpha)
-- Mineplex Studio Client (Not available during closed alpha)
+- Mineplex SDK
+- Mineplex Studio Client
 
 ## Getting Started
 
