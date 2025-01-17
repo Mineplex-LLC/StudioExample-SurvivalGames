@@ -1,11 +1,12 @@
+> [!IMPORTANT]
+> This example project is Archived. It should be used for reference only. We decided it wasn't clear and simple to understand, and lacked a lot of the description and explanation required to support our current documentation standards. It is also heavily out of date - not showcasing modern features. We'd suggest you check out https://docs.mineplex.com/docs/example-project/dragons instead!
+
 <br/>
 <p align="center">
   <h3 align="center">Survival Games - Studio Example</h3>
 
   <p align="center">
-    <a href="https://studio.mineplex.com/docs">Studio Docs</a>
-    .
-    <a href="https://discord.gg/mineplex">Discord</a>
+    <a href="https://docs.mineplex.com/docs/introduction">Studio Documentation</a>
   </p>
 </p>
 
